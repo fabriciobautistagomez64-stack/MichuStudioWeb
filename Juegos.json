@@ -1,0 +1,13 @@
+[
+  {
+    "id": "michiverse",
+    "name": "Michiverse",
+    "description": "Un mundo de bloques con estilo propio, en desarrollo.",
+    "platform": "Android",
+    "version": "Alpha 1.0.0",
+    "download": "/games/Michiverse/Michiverse.apk",
+    "icon": "/images/michiverse-icon.png",
+    "available": false,
+    "note": "Sube el APK de la versión que quieras publicar antes de poner available en true."
+  }
+]
