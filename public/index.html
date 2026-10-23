@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#c7f6df">
+  <meta name="description" content="MichuStudio — juegos, noticias, comunidad y tu cuenta Michiverse.">
+  <title>MichuStudio · Un lugar para crear</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <div class="top-glow"></div>
+  <header class="site-header">
+    <a class="brand" href="#home" aria-label="MichuStudio inicio"><span class="brand-mark">m</span><span>Michu<span class="brand-light">Studio</span><small>cosas hechas con ganas ✦</small></span></a>
+    <nav class="main-nav" aria-label="Navegación principal">
+      <button class="nav-link active" data-page="home" data-i18n="navHome">Inicio</button>
+      <button class="nav-link" data-page="games" data-i18n="navGames">Juegos</button>
+      <button class="nav-link" data-page="wiki" data-i18n="navWiki">Wiki</button>
+      <button class="nav-link" data-page="news" data-i18n="navNews">Noticias</button>
+      <button class="nav-link" data-page="forum" data-i18n="navForum">Foro</button>
+      <button class="nav-link" data-page="community" data-i18n="navCommunity">Comunidad</button>
+    </nav>
+    <div class="header-actions">
+      <label class="language-picker"><span class="sr-only">Language</span><select id="language"><option value="es">Español</option><option value="pt-BR">Português (BR)</option><option value="en">English</option></select></label>
+      <button class="button button-dark" id="openAccount" data-i18n="account">Mi cuenta</button>
+      <button class="mobile-menu" id="mobileMenu" aria-label="Abrir menú">☰</button>
+    </div>
+  </header>
+
+  <main class="page-wrap">
+    <section class="page active" id="page-home">
+      <div class="hero">
+        <div class="hero-copy">
+          <div class="eyebrow"><span class="status-dot"></span><span data-i18n="heroEyebrow">Un estudio peque, ideas enormes</span></div>
+          <h1 data-i18n="heroTitle">Bienvenido a tu<br><span>rincón creativo.</span></h1>
+          <p class="hero-lead" data-i18n="heroLead">Juegos, mundos, personajes y una comunidad que todavía está creciendo. Pasa, mira un poco y quedate si te gusta.</p>
+          <div class="hero-actions"><button class="button button-dark" data-goto="games" data-i18n="exploreGames">Explorar juegos <span>↗</span></button><button class="button button-soft" data-goto="community" data-i18n="meetPeople">Conocer gente</button></div>
+          <div class="hero-note"><span class="mini-avatars"><i>🐱</i><i>🌱</i><i>🎮</i></span><span data-i18n="heroNote">Un proyecto independiente, creciendo de a poquito.</span></div>
+        </div>
+        <div class="hero-art" aria-label="Ilustración decorativa de gato y estrellas"><div class="art-sun"></div><div class="art-orbit orbit-one"></div><div class="art-orbit orbit-two"></div><div class="art-card art-card-top">✦ <span>make stuff</span></div><div class="cat-face"><span class="ear ear-left"></span><span class="ear ear-right"></span><span class="eye eye-left"></span><span class="eye eye-right"></span><span class="cheek cheek-left"></span><span class="cheek cheek-right"></span><span class="cat-mouth">⌣</span><span class="cat-leaf">✿</span></div><div class="art-card art-card-bottom"><b>67%</b><span>ideas loading...</span></div><span class="spark spark-a">✦</span><span class="spark spark-b">✳</span><span class="spark spark-c">✦</span></div>
+      </div>
+      <div class="section-heading"><div><span class="eyebrow" data-i18n="littleCorner">Un poquito de todo</span><h2 data-i18n="whatHere">¿Qué hay por acá?</h2></div><span class="heading-aside" data-i18n="chooseYourPath">Elige tu camino ↘</span></div>
+      <div class="feature-grid">
+        <button class="feature-card feature-mint" data-goto="games"><span class="feature-icon">🎮</span><span class="feature-tag">01 / PLAY</span><h3 data-i18n="featureGames">Juegos y descargas</h3><p data-i18n="featureGamesText">Pásate a ver los proyectos y lo que viene después.</p><span class="card-arrow">↗</span></button>
+        <button class="feature-card feature-lilac" data-goto="wiki"><span class="feature-icon">📚</span><span class="feature-tag">02 / KNOW</span><h3 data-i18n="featureWiki">La Wiki</h3><p data-i18n="featureWikiText">Datos, guías y detalles del universo Michiverse.</p><span class="card-arrow">↗</span></button>
+        <button class="feature-card feature-peach" data-goto="forum"><span class="feature-icon">💬</span><span class="feature-tag">03 / TALK</span><h3 data-i18n="featureForum">El foro</h3><p data-i18n="featureForumText">Comparte ideas, pregunta o saluda a la banda.</p><span class="card-arrow">↗</span></button>
+      </div>
+      <div class="banner-strip"><div class="banner-symbol">✳</div><div><h3 data-i18n="bannerTitle">Hecho por gente, no por una corporación gigante.</h3><p data-i18n="bannerText">Todavía hay cosas en construcción. Si algo se rompe, avisanos y lo arreglamos.</p></div><button class="text-button" data-goto="news" data-i18n="seeNews">Ver novedades ↗</button></div>
+    </section>
+
+    <section class="page" id="page-games">
+      <div class="page-intro"><span class="eyebrow" data-i18n="downloadZone">DESCARGAS</span><h1 data-i18n="gamesTitle">Juegos para probar.</h1><p data-i18n="gamesLead">Proyectos hechos con cariño y un par de bugs que ya vamos a arreglar xd.</p></div>
+      <div id="gamesList" class="game-grid"><article class="game-card"><div class="game-cover game-cover-green">🐾</div><div class="game-card-body"><span class="pill">ANDROID</span><h3>Michiverse</h3><p data-i18n="michiverseDesc">Un mundo de bloques con su propio estilo. Explora, construye y encuentra cosas raras.</p><button class="button button-dark" disabled data-i18n="downloadUnavailable">Descarga próximamente</button></div></article></div>
+      <p class="muted small" data-i18n="downloadNote">Los archivos se publican cuando el equipo sube una versión estable. No descargues APKs de links raros, porfa.</p>
+    </section>
+
+    <section class="page" id="page-wiki">
+      <div class="page-intro"><span class="eyebrow">MICHUSTUDIO / ARCHIVE</span><h1 data-i18n="wikiTitle">La Wiki, sin vueltas.</h1><p data-i18n="wikiLead">Una guía para encontrar lo básico sin tragarte un muro de texto.</p></div>
+      <div class="wiki-layout"><aside class="wiki-menu"><button class="wiki-tab active" data-wiki="start" data-i18n="wikiStart">Empezar aquí</button><button class="wiki-tab" data-wiki="michiverse">Michiverse</button><button class="wiki-tab" data-wiki="account" data-i18n="wikiAccount">Tu cuenta</button><button class="wiki-tab" data-wiki="community" data-i18n="wikiCommunity">Comunidad</button></aside><article class="wiki-article" id="wikiArticle"><span class="pill">GUÍA RÁPIDA</span><h2 data-i18n="wikiStartTitle">Ey, bienvenido 👋</h2><p data-i18n="wikiStartText">MichuStudio junta proyectos, noticias y gente que disfruta creando cosas. Esta wiki irá creciendo cuando haya más guías reales que valga la pena guardar.</p><div class="tip-box" data-i18n="wikiTip">Dato: nunca compartas tu contraseña ni tu token de sesión, ni aunque alguien diga que es del equipo.</div></article></div>
+    </section>
+
+    <section class="page" id="page-news">
+      <div class="page-intro"><span class="eyebrow" data-i18n="newsDesk">EL TABLÓN</span><h1 data-i18n="newsTitle">Novedades, sin humo.</h1><p data-i18n="newsLead">Anuncios y notas del proyecto. Nada de inventar fechas mágicas 😅.</p></div>
+      <div class="news-grid"><article class="news-card news-feature"><div class="news-art">🌱<span>DEVLOG / 001</span></div><div class="news-body"><span class="pill" data-i18n="inProgress">EN PROCESO</span><h2 data-i18n="newsOneTitle">La web empieza a tomar forma</h2><p data-i18n="newsOneText">Estamos armando un sitio para juntar descargas, perfiles y la comunidad en un solo lugar. Algunas secciones van a ir llegando por partes.</p><span class="muted small" data-i18n="newsDate">Publicado · primer registro</span></div></article><article class="news-card"><div class="news-art news-art-lilac">🧩<span>BUILD / NOTES</span></div><div class="news-body"><span class="pill" data-i18n="projectNotes">NOTAS</span><h3 data-i18n="newsTwoTitle">Lo que falta también cuenta</h3><p data-i18n="newsTwoText">Si un botón todavía no hace nada, lo vamos a marcar en vez de fingir que ya funciona.</p></div></article></div>
+    </section>
+
+    <section class="page" id="page-forum">
+      <div class="page-intro"><span class="eyebrow">COMMUNITY / CHATTER</span><h1 data-i18n="forumTitle">El foro de la banda.</h1><p data-i18n="forumLead">Comparte algo, pregunta lo que sea del proyecto o deja un hola. Sin ponerse intensos.</p></div>
+      <div class="forum-compose" id="forumCompose"><div class="compose-avatar">✎</div><div class="compose-fields"><input id="postTitle" maxlength="100" data-i18n-placeholder="postTitlePlaceholder" placeholder="¿Qué tienes en mente? (título)"><textarea id="postBody" maxlength="3000" rows="3" data-i18n-placeholder="postBodyPlaceholder" placeholder="Escribe tu publicación..."></textarea><div class="compose-bottom"><span class="muted small" id="forumAuthHint" data-i18n="loginToPost">Inicia sesión para publicar.</span><button class="button button-dark" id="publishPost" data-i18n="publish">Publicar ↗</button></div></div></div>
+      <div class="forum-list-header"><h2 data-i18n="recentPosts">Lo último</h2><button class="text-button" id="refreshForum" data-i18n="refresh">Actualizar ↻</button></div><div id="forumPosts" class="forum-posts"><div class="empty-state" data-i18n="loadingPosts">Cargando publicaciones...</div></div>
+    </section>
+
+    <section class="page" id="page-community">
+      <div class="page-intro"><span class="eyebrow" data-i18n="communitySpace">TU GENTE</span><h1 data-i18n="communityTitle">Encuentra a tu crew.</h1><p data-i18n="communityLead">Busca cuentas, manda solicitudes y escribe mensajes internos sin salir de la web.</p></div>
+      <div class="community-grid"><div class="panel"><div class="panel-title"><div><span class="eyebrow" data-i18n="directory">DIRECTORIO</span><h2 data-i18n="findPeople">Buscar personas</h2></div><span class="panel-icon">⌕</span></div><div class="search-row"><input id="userSearch" maxlength="32" data-i18n-placeholder="searchPlaceholder" placeholder="Busca un nombre..." autocomplete="off"><button class="button button-dark" id="searchUsers" data-i18n="search">Buscar</button></div><div id="userResults" class="user-list"><p class="muted small" data-i18n="searchHint">Inicia sesión para buscar cuentas.</p></div></div><div class="panel"><div class="panel-title"><div><span class="eyebrow" data-i18n="yourCircle">TU CÍRCULO</span><h2 data-i18n="friendRequests">Solicitudes</h2></div><button class="icon-button" id="refreshRequests" aria-label="Actualizar">↻</button></div><div id="requestsList" class="user-list"><p class="muted small" data-i18n="loginToSeeRequests">Inicia sesión para ver solicitudes.</p></div><div class="divider-line"></div><div class="panel-title"><h3 data-i18n="yourFriends">Tus amigos</h3><button class="text-button" id="refreshFriends" data-i18n="refresh">Actualizar ↻</button></div><div id="friendsList" class="user-list"><p class="muted small" data-i18n="loginToSeeFriends">Inicia sesión para ver tus amigos.</p></div></div></div>
+      <div class="panel inbox-panel"><div class="panel-title"><div><span class="eyebrow">PRIVATE MAIL</span><h2 data-i18n="inboxTitle">Tu bandeja</h2></div><button class="icon-button" id="refreshMail" aria-label="Actualizar">↻</button></div><p class="muted small" data-i18n="inboxDescription">Mensajes internos entre cuentas de MichuStudio; no son correos de Gmail.</p><div id="inboxList" class="mail-list"><p class="muted small" data-i18n="loginToSeeMail">Inicia sesión para ver tu bandeja.</p></div><div class="mail-compose"><input id="mailTo" data-i18n-placeholder="recipientPlaceholder" placeholder="ID de la cuenta destinataria"><textarea id="mailMessage" rows="2" maxlength="2000" data-i18n-placeholder="messagePlaceholder" placeholder="Escribe un mensaje... "></textarea><button class="button button-dark" id="sendMail" data-i18n="sendMessage">Enviar mensaje ↗</button></div></div>
+    </section>
+
+    <section class="page" id="page-account">
+      <div class="page-intro"><span class="eyebrow" data-i18n="accountSpace">TU ESPACIO</span><h1 data-i18n="accountTitle">Tu cuenta, a tu manera.</h1><p data-i18n="accountLead">Entra, ajusta tu perfil y vuelve cuando quieras. No hace falta cerrar sesión para cada cambio.</p></div>
+      <div class="account-layout"><div class="panel auth-panel" id="authPanel"><div class="auth-tabs"><button class="auth-tab active" data-auth-mode="login" data-i18n="login">Iniciar sesión</button><button class="auth-tab" data-auth-mode="register" data-i18n="register">Crear cuenta</button></div><form id="authForm"><label data-i18n="username">Nombre de usuario</label><input name="username" id="authUsername" required minlength="3" maxlength="32" autocomplete="username"><label data-i18n="password">Contraseña</label><input name="password" id="authPassword" type="password" required minlength="8" maxlength="72" autocomplete="current-password"><div id="registerExtras" hidden><label data-i18n="regionOptional">Región (opcional, 2 letras)</label><input name="region" id="authRegion" maxlength="2" placeholder="AR"></div><button class="button button-dark button-wide" id="authSubmit" type="submit" data-i18n="login">Iniciar sesión</button><p class="muted small" data-i18n="accountPrivacy">Tu contraseña no se muestra en el perfil. Guardala en un sitio seguro.</p></form></div>
+        <div class="panel profile-panel" id="profilePanel" hidden><div class="profile-banner" id="profileBanner"><button class="banner-edit" id="chooseBanner" data-i18n="changeBanner">Cambiar banner</button></div><div class="profile-main"><div class="avatar-wrap"><div class="profile-avatar" id="profileAvatar">🐱</div><button class="avatar-edit" id="chooseAvatar" aria-label="Cambiar foto">✎</button></div><div class="profile-summary"><span class="pill" id="profileRole">USER</span><h2 id="profileName">Michu</h2><p id="profileStatus" class="muted">...</p></div><button class="button button-soft" id="logout" data-i18n="logout">Cerrar sesión</button></div><form id="profileForm" class="profile-form"><div class="form-two"><div><label data-i18n="displayName">Nombre visible</label><input id="editUsername" maxlength="32" required></div><div><label data-i18n="status">Estado</label><input id="editStatus" maxlength="60"></div></div><label data-i18n="description">Descripción</label><textarea id="editDescription" maxlength="300" rows="3"></textarea><div class="form-two"><div><label data-i18n="region">Región</label><input id="editRegion" maxlength="2" placeholder="AR"></div><div><label data-i18n="accentColor">Color de perfil</label><input id="editAccent" type="color" value="#a5edc7"></div></div><div class="privacy-row"><label><input type="checkbox" id="hideRegion"> <span data-i18n="hideRegion">Ocultar región</span></label><label><input type="checkbox" id="hideOnline"> <span data-i18n="hideOnline">Ocultar estado online</span></label></div><button class="button button-dark" type="submit" data-i18n="saveProfile">Guardar cambios</button></form><div class="account-meta"><span><small data-i18n="accountId">ID de cuenta</small><b id="profileId">—</b></span><span><small data-i18n="memberSince">Miembro desde</small><b id="memberSince">—</b></span><span><small data-i18n="playTime">Tiempo jugado</small><b id="playTime">—</b></span></div><form id="passwordForm" class="password-form"><h3 data-i18n="changePassword">Cambiar contraseña</h3><div class="form-two"><input type="password" id="currentPassword" minlength="8" maxlength="72" required data-i18n-placeholder="currentPassword" placeholder="Contraseña actual"><input type="password" id="newPassword" minlength="8" maxlength="72" required data-i18n-placeholder="newPassword" placeholder="Nueva contraseña"></div><button class="button button-soft" type="submit" data-i18n="updatePassword">Actualizar contraseña</button></form></div>
+      </div>
+      <input type="file" id="avatarFile" accept="image/png,image/jpeg,image/webp,image/avif" hidden><input type="file" id="bannerFile" accept="image/png,image/jpeg,image/webp,image/avif" hidden>
+    </section>
+    <footer class="site-footer"><a class="brand footer-brand" href="#home"><span class="brand-mark">m</span><span>Michu<span class="brand-light">Studio</span><small data-i18n="footerMade">Hecho con un poquito de caos.</small></span></a><div class="footer-links"><button data-goto="wiki" data-i18n="navWiki">Wiki</button><button data-goto="news" data-i18n="navNews">Noticias</button><button data-goto="forum" data-i18n="navForum">Foro</button><button data-goto="account" data-i18n="account">Mi cuenta</button></div><span class="muted small">© <span id="year"></span> MichuStudio</span></footer>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <dialog id="messageDialog" class="message-dialog"><form method="dialog"><button class="dialog-close" aria-label="Cerrar">×</button></form><div id="dialogContent"></div></dialog>
+</body>
+</html>
