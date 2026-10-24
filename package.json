@@ -2,11 +2,11 @@
   "name": "michustudio-site-account-server",
   "version": "1.0.0",
   "private": true,
-  "description": "MichuStudio website and account API",
+  "description": "MichuStudio website and account API proxy",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "check": "node --check server.js && node --check public/app.js && node --check public/admin.js",
+    "check": "node --check server.js",
     "generate-admin-key": "node scripts/generate-admin-key.js"
   },
   "engines": {
