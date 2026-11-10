@@ -1,13 +1,24 @@
+
 [
   {
     "id": "michiverse",
     "name": "Michiverse",
-    "description": "Un mundo de bloques con estilo propio, en desarrollo.",
+    "type": "APK",
     "platform": "Android",
     "version": "Alpha 1.0.0",
-    "download": "/games/Michiverse/Michiverse.apk",
-    "icon": "/images/michiverse-icon.png",
+    "release": "25/11/26",
+    "mark": "M",
+    "image": "Michiverse.png",
     "available": false,
-    "note": "Sube el APK de la versión que quieras publicar antes de poner available en true."
+    "download": "",
+    "description": "Hola, hola, pasa, pasa... Bienvenido a Michiverse. Explora, construye y descubre un mundo de bloques hecho para Android. Todavía está en desarrollo, así que algún bug puede colarse sin invitación.",
+    "longDescription": "Michiverse es un juego de bloques para Android con un mundo voxel, biomas y diferentes lugares para explorar. Puedes construir, recorrer el terreno y descubrir lo que esconde cada zona. El proyecto sigue en desarrollo; esta ficha se actualizará cuando haya nuevas versiones y una descarga disponible.",
+    "requirements": "Por confirmar",
+    "features": [
+      "Mundo voxel con generación de terreno.",
+      "Biomas y lugares para explorar.",
+      "Construcción con diferentes bloques.",
+      "Desarrollo pensado para dispositivos Android."
+    ]
   }
 ]
