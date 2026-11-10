@@ -6,8 +6,6 @@ const https = require('node:https');
 const fs = require('node:fs');
 const path = require('node:path');
 
-require('./integrate-forum');
-
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const MAIN_FILE = path.join(__dirname, 'Main.html');
