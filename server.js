@@ -13,6 +13,11 @@ const MAIN_FILE = path.join(__dirname, 'Main.html');
 const STYLE_FILE = path.join(__dirname, 'Style.css');
 const GAMES_FILE = path.join(__dirname, 'Juegos.json');
 const PHOTOS_DIR = path.join(__dirname, 'Photos');
+const MICHIVERSE_IMAGES_DIR = path.join(PHOTOS_DIR, 'imágenes');
+const MICHIVERSE_IMAGES_FOLDER = 'imágenes';
+const IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.avif', '.gif']);
+
+fs.mkdirSync(MICHIVERSE_IMAGES_DIR, { recursive: true });
 const ACCOUNT_API = new URL(
   (process.env.ACCOUNT_API_URL || 'https://michiverse-server.onrender.com').replace(/\/+$/, '')
 );
@@ -29,12 +34,12 @@ app.get('/health', (_req, res) => {
     accountServer: ACCOUNT_API.origin,
     forumServer: FORUM_API.origin,
     photosDirectory: 'Photos',
+    michiverseImagesDirectory: 'Photos/imágenes',
     gamesFile: 'Juegos.json'
   });
 });
 
 app.get(['/', '/index.html', '/Main.html'], (_req, res) => {
-  // Forzar UTF-8 para tildes, ñ y símbolos.
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.set('Cache-Control', 'no-store, max-age=0');
   res.sendFile(MAIN_FILE, err => {
@@ -47,6 +52,7 @@ app.get(['/', '/index.html', '/Main.html'], (_req, res) => {
 app.get('/Style.css', (_req, res) => {
   res.setHeader('Content-Type', 'text/css; charset=utf-8');
   res.set('Cache-Control', 'no-store, max-age=0');
+  res.type('text/css');
   res.sendFile(STYLE_FILE, err => {
     if (err && !res.headersSent) res.status(404).type('text').send('Style.css no está disponible.');
   });
@@ -59,11 +65,39 @@ app.get(['/Juegos.json', '/juegos.json'], (_req, res) => {
 
   res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.set('Cache-Control', 'no-store, max-age=0');
+  res.type('application/json');
   res.sendFile(GAMES_FILE, err => {
     if (err && !res.headersSent) {
       res.status(404).json({ error: 'No se pudo leer Juegos.json.' });
     }
   });
+});
+
+
+// Lista las capturas de Michiverse. Solo muestra archivos de imagen directos
+// dentro de Photos/imágenes; no recorre carpetas ni expone archivos ocultos.
+app.get('/api/michiverse-images', async (_req, res) => {
+  try {
+    const entries = await fs.promises.readdir(MICHIVERSE_IMAGES_DIR, { withFileTypes: true });
+    const images = entries
+      .filter(entry => entry.isFile() && !entry.name.startsWith('.') && IMAGE_EXTENSIONS.has(path.extname(entry.name).toLowerCase()))
+      .sort((a, b) => a.name.localeCompare(b.name, 'es'))
+      .map(entry => {
+        const extension = path.extname(entry.name);
+        const label = entry.name.slice(0, -extension.length).replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
+        return {
+          name: entry.name,
+          label: label || 'Captura de Michiverse',
+          url: `/Photos/${encodeURIComponent(MICHIVERSE_IMAGES_FOLDER)}/${encodeURIComponent(entry.name)}`
+        };
+      });
+
+    res.set('Cache-Control', 'no-store, max-age=0');
+    res.json({ images });
+  } catch (error) {
+    console.error('[MichuStudio] No se pudo leer Photos/imágenes:', error.message);
+    res.status(500).json({ error: 'No se pudo leer la carpeta Photos/imágenes.' });
+  }
 });
 
 // Todas las imágenes propias de la web se sirven desde /Photos/.
@@ -175,7 +209,6 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(
     `[MichuStudio] Web lista en el puerto ${PORT}; ` +
     `cuentas: ${ACCOUNT_API.origin}; foro: ${FORUM_API.origin}; ` +
-    `imágenes: /Photos; juegos: /Juegos.json`
+    `imágenes: /Photos/imágenes; juegos: /Juegos.json`
   );
 });
-
