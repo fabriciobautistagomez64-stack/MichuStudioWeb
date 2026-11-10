@@ -1,360 +1,214 @@
-<!doctype html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#063d28">
-<meta name="color-scheme" content="light">
-<meta name="description" content="MichuStudio: proyectos, juegos y novedades de Michiverse.">
-<title>MichuStudio · Michiverse y otros proyectos</title>
-<link rel="icon" href="/Photos/Michiverse.svg" type="image/svg+xml">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.48.0/dist/tabler-icons.min.css">
-<link rel="stylesheet" href="/Style.css?v=3">
-<style id="forum-compose-layout-fix">
-  /* El formulario actual ya no usa la columna de avatar del diseño anterior. */
-  #forumCompose {
-    grid-template-columns: minmax(0, 1fr) !important;
-  }
-
-  #forumCompose #postBody {
-    display: block;
-    width: 100%;
-    min-width: 0;
-    min-height: 110px;
-    box-sizing: border-box;
-    writing-mode: horizontal-tb;
-    text-orientation: mixed;
-    white-space: pre-wrap;
-    overflow-wrap: anywhere;
-    resize: vertical;
-  }
-  .game-detail-layout.no-image {
-    grid-template-columns: minmax(0, 1fr) !important;
-  }
-</style>
-
-<style id="michustudio-voxel-motion">
-@keyframes msVoxelFloat{0%,100%{transform:translate3d(0,0,0) rotate(45deg)}50%{transform:translate3d(0,-13px,0) rotate(51deg)}}
-@keyframes msVoxelDrift{0%,100%{transform:translateX(0)}50%{transform:translateX(17px)}}
-@keyframes msVoxelPulse{0%,100%{opacity:.65;filter:brightness(1)}50%{opacity:1;filter:brightness(1.22)}}
-@keyframes msVoxelRise{0%{transform:translateY(14px) rotate(45deg);opacity:.35}50%{opacity:1}100%{transform:translateY(-12px) rotate(45deg);opacity:.8}}
-.hero-art{isolation:isolate;overflow:hidden}
-.hero-art::before,.hero-art::after{content:"";position:absolute;z-index:1;pointer-events:none;width:23px;height:23px;image-rendering:pixelated}
-.hero-art::before{left:13%;top:17%;background:#8ce36a;box-shadow:23px 0 #62bd54,0 23px #4a9947,23px 23px #367b3d,46px 23px #7fd35b,23px 46px #2d6938;animation:msVoxelFloat 5.5s ease-in-out infinite}
-.hero-art::after{right:12%;top:24%;background:#b4e7ff;box-shadow:20px 0 #75c7e8,0 20px #75c7e8,20px 20px #4a9fc5;animation:msVoxelFloat 6.5s ease-in-out -1.5s infinite}
-.hero-art-image,.hero-art-text,.voxel-emblem,.hero-spark{position:relative;z-index:2}
-.feature-card,.game-card,.news-card,.wiki-info-card,.forum-side-card{transition:transform .28s cubic-bezier(.2,.8,.2,1),box-shadow .28s ease}
-.feature-card:hover,.game-card:hover,.news-card:hover,.wiki-info-card:hover,.forum-side-card:hover{transform:translateY(-5px)}
-.voxel-gallery{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:22px}
-.voxel-gallery-card{margin:0;min-width:0;overflow:hidden;border:1px solid rgba(80,145,95,.24);border-radius:18px;background:var(--panel,#fff);box-shadow:0 10px 30px rgba(20,70,35,.08);transition:transform .3s ease,box-shadow .3s ease}
-.voxel-gallery-card:hover{transform:translateY(-7px);box-shadow:0 18px 38px rgba(20,70,35,.15)}
-.voxel-gallery-card figcaption{display:flex;flex-direction:column;gap:4px;padding:13px 15px 15px}
-.voxel-gallery-card figcaption b{font-size:14px}.voxel-gallery-card figcaption span{font-size:12px;opacity:.68}
-.voxel-scene{position:relative;height:190px;overflow:hidden;isolation:isolate;background:linear-gradient(180deg,#a8dcf2 0%,#d9f4e2 70%,#9fd88d 100%);image-rendering:pixelated}
-.voxel-scene::before{content:"";position:absolute;left:-5%;right:-5%;bottom:0;height:45%;background:#78bd62;clip-path:polygon(0 34%,18% 34%,18% 12%,39% 12%,39% 30%,58% 30%,58% 0,80% 0,80% 27%,100% 27%,100% 100%,0 100%);box-shadow:inset 0 10px rgba(220,255,175,.35);animation:msVoxelPulse 7s ease-in-out infinite}
-.voxel-scene--night{background:linear-gradient(180deg,#101c42 0%,#283f6d 65%,#536b83 100%)}
-.voxel-scene--night::before{background:#263c55;clip-path:polygon(0 30%,20% 30%,20% 4%,44% 4%,44% 25%,65% 25%,65% 0,84% 0,84% 32%,100% 32%,100% 100%,0 100%)}
-.voxel-scene--ore{background:linear-gradient(180deg,#243b43 0%,#405e59 56%,#6c8060 100%)}
-.voxel-scene--ore::before{background:#536453;clip-path:polygon(0 15%,25% 15%,25% 0,52% 0,52% 24%,78% 24%,78% 9%,100% 9%,100% 100%,0 100%)}
-.voxel-block{position:absolute;z-index:2;width:25px;height:25px;transform:rotate(45deg);border-radius:2px;background:#9de16e;box-shadow:inset -7px -7px 0 rgba(35,100,48,.25),inset 5px 5px 0 rgba(255,255,255,.24);animation:msVoxelRise 4.8s ease-in-out infinite}
-.block-a{left:22%;bottom:37%;animation-delay:-.4s}.block-b{left:50%;bottom:49%;background:#71c9eb;animation-delay:-1.7s}.block-c{right:18%;bottom:32%;background:#d7c27c;animation-delay:-2.8s}
-.voxel-cloud{position:absolute;z-index:1;width:44px;height:13px;top:24%;background:rgba(255,255,255,.78);box-shadow:10px -9px 0 -1px rgba(255,255,255,.78),22px 0 0 -2px rgba(255,255,255,.78);animation:msVoxelDrift 8s ease-in-out infinite}
-.cloud-a{left:12%}.cloud-b{right:12%;top:42%;animation-delay:-3s;transform:scale(.75)}
-.voxel-star{position:absolute;width:5px;height:5px;background:#eff7a2;box-shadow:0 0 12px #eff7a2;animation:msVoxelPulse 2s ease-in-out infinite}.star-a{left:22%;top:22%}.star-b{right:24%;top:31%;animation-delay:-1s}
-.voxel-crystal{position:absolute;z-index:3;left:50%;top:29%;width:27px;height:48px;background:linear-gradient(90deg,#9ff6df 0 28%,#42c7ad 28% 72%,#258b83 72%);clip-path:polygon(50% 0,100% 25%,82% 100%,18% 100%,0 25%);filter:drop-shadow(0 8px 14px rgba(0,0,0,.22));animation:msVoxelFloat 4s ease-in-out infinite}
-@media(max-width:700px){.voxel-gallery{grid-template-columns:1fr}.voxel-scene{height:165px}.hero-art::before{left:7%;top:12%;transform:scale(.8)}}
-@media(prefers-reduced-motion:reduce){.hero-art::before,.hero-art::after,.voxel-block,.voxel-cloud,.voxel-star,.voxel-crystal,.voxel-scene::before{animation:none!important}.feature-card,.game-card,.news-card,.wiki-info-card,.forum-side-card,.voxel-gallery-card{transition:none!important}}
-</style>
-
-</head>
-<body>
-<div class="top-line"></div>
-<header class="site-header">
-  <a class="brand" href="#home" aria-label="MichuStudio inicio"><span class="brand-mark"><i class="ti ti-cube-3d-sphere"></i></span><span><span class="brand-name">MichuStudio</span><span class="brand-sub">JUEGOS · MICHIVERSE · PROYECTOS</span></span></a>
-  <nav class="main-nav" aria-label="Navegación principal">
-    <button class="nav-link active" data-page="home"><i class="ti ti-home-2"></i> <span data-i18n="navHome">Inicio</span></button>
-    <button class="nav-link" data-page="games"><i class="ti ti-device-gamepad-2"></i> <span data-i18n="navGames">Juegos</span></button>
-    <button class="nav-link" data-page="wiki"><i class="ti ti-book-2"></i> <span data-i18n="navWiki">Wiki</span></button>
-    <button class="nav-link" data-page="news"><i class="ti ti-news"></i> <span data-i18n="navNews">Novedades</span></button>
-    <button class="nav-link" data-page="forum"><i class="ti ti-message-circle-2"></i> <span data-i18n="navForum">Foro</span></button>
-    <button class="nav-link" data-page="community"><i class="ti ti-users"></i> <span data-i18n="navCommunity">Comunidad</span></button>
-    <button class="nav-link" data-page="settings"><i class="ti ti-settings"></i> <span>Ajustes</span></button>
-  </nav>
-  <div class="header-right"><label class="language-picker"><span hidden>Idioma</span><select id="language" aria-label="Idioma"><option value="es">Español</option><option value="pt-BR">Português</option><option value="en">English</option></select></label><button class="button button-primary" id="openAccount" data-page="account" data-i18n="account">Mi cuenta :3</button><button class="mobile-menu" id="mobileMenu" aria-label="Abrir menú" aria-expanded="false"><i class="ti ti-menu-2"></i></button></div>
-</header>
-<main class="wrap page-wrap">
-<section class="page active" id="page-home">
-  <div class="hero"><div class="hero-copy"><div class="eyebrow"><i class="ti ti-sparkles"></i><span data-i18n="heroEyebrow">UN PEQUEÑO ESTUDIO INDEPENDIENTE</span></div><h1>Hola, soy<br><span class="gradient-text">MichuStudio.</span></h1><p class="hero-lead" data-i18n="heroLead">Este es el rincón donde reúno mis juegos y proyectos. Explora Michiverse, revisa las novedades y descubre qué estoy preparando. Hay algunas sorpresas... y probablemente algún bug. :P</p><div class="hero-actions"><button class="button button-primary" data-goto="games"><span data-i18n="exploreGames">Ver juegos</span><i class="ti ti-arrow-up-right"></i></button><button class="button button-secondary" data-goto="news"><i class="ti ti-news"></i><span data-i18n="meetProjects">Ver novedades</span></button></div><div class="hero-note"><i class="ti ti-circle-check"></i><span data-i18n="heroNote">Creado por MichuStudio. Los bugs no forman parte del diseño... aunque a veces se comporten como si lo fueran. :/</span></div></div><div class="hero-art" aria-label="Michiverse, proyecto destacado"><img id="heroGameImage" class="hero-art-image" alt="" hidden><span class="voxel-emblem">MS</span><span class="hero-spark spark-a">✳</span><span class="hero-spark spark-b">✦</span><div class="hero-art-text"><small>PROYECTO DESTACADO</small><strong>Michiverse</strong><span>Un mundo de bloques para explorar</span></div></div></div>
-  <div class="section-head"><div><span class="kicker">EXPLORA MICHUSTUDIO</span><h2>¿Qué quieres <span>explorar?</span></h2></div><span class="tag">MICHUSTUDIO</span></div>
-  <div class="feature-grid"><button class="feature-card" data-goto="games"><span class="feature-icon"><i class="ti ti-device-gamepad-2"></i></span><span class="feature-tag">01 / JUEGOS</span><h3 data-i18n="featureGames">Juegos y descargas</h3><p data-i18n="featureGamesText">Descubre los juegos, consulta sus versiones y revisa cómo avanza cada proyecto.</p><span class="card-arrow">↗</span></button><button class="feature-card" data-goto="wiki"><span class="feature-icon"><i class="ti ti-book-2"></i></span><span class="feature-tag">02 / WIKI</span><h3 data-i18n="featureWiki">La Wiki</h3><p data-i18n="featureWikiText">Información sobre Michiverse y algunos detalles de su desarrollo.</p><span class="card-arrow">↗</span></button><button class="feature-card" data-goto="forum"><span class="feature-icon"><i class="ti ti-message-circle-2"></i></span><span class="feature-tag">03 / FORO</span><h3 data-i18n="featureForum">El foro</h3><p data-i18n="featureForumText">Comparte ideas, haz preguntas y comenta las publicaciones de la comunidad.</p><span class="card-arrow">↗</span></button></div>
-  <div class="banner-strip"><span class="banner-symbol"><i class="ti ti-info-square-rounded"></i></span><div><h3 data-i18n="bannerTitle">Todo se hace poco a poco.</h3><p data-i18n="bannerText">Aquí encontrarás las versiones disponibles y las funciones que siguen en desarrollo. No habrá botones de descarga que no lleven a ninguna parte. :P</p></div><button class="text-button" data-goto="news" data-i18n="seeNews">Ver novedades ↗</button></div>
-</section>
-<section class="page" id="page-games"><div class="page-intro"><span class="eyebrow" data-i18n="downloadZone">JUEGOS / DESCARGAS</span><h1 data-i18n="gamesTitle">Juegos de MichuStudio</h1><p data-i18n="gamesLead">Aquí están los juegos publicados y los que siguen en desarrollo. Abre la ficha para ver más información de cada uno.</p></div><div id="gamesList" class="game-grid"><div class="empty-state">Cargando juegos...</div></div><section class="panel game-detail-panel" id="gameDetailSection" hidden aria-live="polite"><div class="empty-state">Selecciona un juego para ver su información.</div></section><p class="muted small" style="margin-top:14px" data-i18n="downloadNote">Solo aparecerá una descarga cuando exista un archivo publicado. Si todavía no está disponible, el botón permanecerá desactivado.</p></section>
-<section class="page" id="page-wiki"><div class="page-intro"><span class="eyebrow">WIKI / MICHUSTUDIO</span><h1 data-i18n="wikiTitle">Wiki de Michiverse</h1><p data-i18n="wikiLead">Un sitio para consultar información del juego, su desarrollo y algunos detalles técnicos.</p></div><div class="wiki-layout"><aside class="wiki-menu" aria-label="Secciones de la Wiki"><button class="wiki-tab active" data-wiki="start"><i class="ti ti-layout-dashboard"></i> Inicio</button><button class="wiki-tab" data-wiki="michiverse"><i class="ti ti-box-multiple"></i> Michiverse</button><button class="wiki-tab" data-wiki="performance"><i class="ti ti-gauge"></i> Rendimiento</button><button class="wiki-tab" data-wiki="team"><i class="ti ti-code"></i> Desarrollo</button><button class="wiki-tab" data-wiki="media"><i class="ti ti-photo"></i> Imágenes</button><button class="wiki-tab" data-wiki="account"><i class="ti ti-user-cog"></i> Cuenta</button><button class="wiki-tab" data-wiki="community"><i class="ti ti-messages"></i> Comunidad</button></aside><article class="wiki-article" id="wikiArticle"></article></div></section>
-<section class="page" id="page-news"><div class="page-intro"><span class="eyebrow" data-i18n="newsDesk">NOVEDADES</span><h1 data-i18n="newsTitle">Lo que pasa en MichuStudio</h1><p data-i18n="newsLead">Notas sobre los proyectos y cambios de la página.</p></div><div class="news-grid"><article class="news-card"><div class="news-art"><i class="ti ti-box-multiple"></i><span>DEVLOG / 001</span></div><div class="news-body"><span class="pill">EN DESARROLLO</span><h2 data-i18n="newsOneTitle">Michiverse sigue creciendo</h2><p data-i18n="newsOneText">El juego continúa en desarrollo. La idea es crear un mundo de bloques con su propio estilo y que funcione bien en Android.</p><span class="muted small" data-i18n="newsDate">Nota de desarrollo</span></div></article><article class="news-card"><div class="news-art"><i class="ti ti-layout-dashboard"></i><span>WEBSITE / NOTES</span></div><div class="news-body"><span class="pill">MICHUSTUDIO</span><h3 data-i18n="newsTwoTitle">La página también se actualiza</h3><p data-i18n="newsTwoText">La web reúne las fichas de los juegos, sus descargas, la Wiki y las funciones de comunidad.</p></div></article></div></section>
-<section class="page" id="page-forum">
-  <div class="page-intro">
-    <span class="eyebrow">MICHUSTUDIO / CONVERSACIONES</span>
-    <h1>El foro de MichuStudio</h1>
-    <p>Comparte lo que estás haciendo, publica una idea o crea una encuesta. No hace falta escribir una novela. :P</p>
-  </div>
-  <div class="forum-layout">
-    <div class="forum-main">
-      <form class="forum-compose card" id="forumCompose">
-        <div class="compose-topline">
-          <div class="compose-avatar" id="composeAvatar">🐱</div>
-          <div class="compose-title"><strong>¿Qué está pasando?</strong><span>Un espacio para compartir tus ideas y hablar sobre los proyectos.</span></div>
-        </div>
-        <select id="forumCategory" class="field forum-category" aria-label="Categoría"><option value="">Cargando categorías...</option></select>
-        <textarea id="postBody" aria-label="Texto de la publicación" maxlength="5000" rows="4" ></textarea>
-        <div class="compose-extra">
-          <label class="upload-chip" for="postImages"><i class="ti ti-photo-plus"></i> Agregar imágenes</label>
-          <input id="postImages" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden>
-          <span class="muted small" id="imageSelectionLabel">Hasta 4 imágenes · 5 MB cada una</span>
-        </div>
-        <details class="poll-builder">
-          <summary><i class="ti ti-chart-bar"></i> Crear encuesta</summary>
-          <input id="forumPollQuestion" aria-label="Pregunta de la encuesta" maxlength="250">
-          <div id="forumPollOptions" class="poll-options">
-            <input class="forum-poll-option" maxlength="100" aria-label="Opción de encuesta">
-            <input class="forum-poll-option" maxlength="100" aria-label="Opción de encuesta">
-          </div>
-          <button id="addPollOption" class="mini-button" type="button">+ Otra opción</button>
-        </details>
-        <div class="compose-bottom">
-          <span class="muted small" id="forumAuthHint">Inicia sesión para publicar. Los fantasmas todavía no tienen cuenta. :0</span>
-          <button class="button button-primary" id="publishPost" type="submit">Publicar ↗</button>
-        </div>
-      </form>
-      <div class="forum-feed-toolbar">
-        <div><span class="eyebrow">EL FEED</span><h2>Publicaciones recientes</h2></div>
-        <div class="feed-toolbar-actions">
-          <select id="forumFilter" aria-label="Filtrar por categoría"><option value="">Todas</option></select>
-          <button class="text-button" id="refreshForum" type="button">Actualizar ↻</button>
-        </div>
-      </div>
-      <div id="forumPosts" class="forum-feed"><div class="empty-state">Cargando publicaciones...</div></div>
-      <button id="forumMorePosts" class="button button-secondary forum-more" type="button" hidden>Cargar más publicaciones</button>
-    </div>
-    <aside class="forum-side">
-      <div class="forum-side-card">
-        <div class="side-pixel-art"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
-        <span class="eyebrow">MICHUSTUDIO</span>
-        <h3>El espacio de la comunidad</h3>
-        <p>Publicaciones, capturas, ideas y preguntas: todo en un mismo lugar.</p>
-        <button class="button button-soft" type="button" data-goto="community">Ver comunidad ↗</button>
-      </div>
-      <div class="forum-side-card forum-side-tip">
-        <i class="ti ti-bulb"></i>
-        <b>Dato curioso</b>
-        <p>Puedes añadir imágenes y encuestas a tus publicaciones. ¡Aprovéchalo! ;D</p>
-      </div>
-    </aside>
-  </div>
-</section>
-<section class="page" id="page-settings">
-  <div class="page-intro"><span class="eyebrow">MICHUSTUDIO / PERSONALIZACIÓN</span><h1>Ajustes del sitio</h1><p>Personaliza la página con los colores que prefieras. Tu pantalla, tus reglas. :3</p></div>
-  <div class="settings-layout">
-    <section class="panel settings-panel">
-      <div class="settings-heading"><span class="settings-icon"><i class="ti ti-palette"></i></span><div><h2>Colores de la página</h2><p>Elige el color principal. La selección se guarda en este dispositivo.</p></div></div>
-      <label class="setting-label" for="settingAccent">Color principal</label>
-      <div class="color-setting-row"><input id="settingAccent" type="color" value="#0ac85b"><span id="settingAccentValue">#0AC85B</span></div>
-      <div class="palette-presets">
-        <button type="button" class="palette-swatch" data-accent="#0ac85b" aria-label="Verde Michu"><i style="background:#0ac85b"></i><span>Michu</span></button>
-        <button type="button" class="palette-swatch" data-accent="#28a7e8" aria-label="Azul"><i style="background:#28a7e8"></i><span>Azul</span></button>
-        <button type="button" class="palette-swatch" data-accent="#9a70ee" aria-label="Violeta"><i style="background:#9a70ee"></i><span>Violeta</span></button>
-        <button type="button" class="palette-swatch" data-accent="#ff9c38" aria-label="Naranja"><i style="background:#ff9c38"></i><span>Naranja</span></button>
-        <button type="button" class="palette-swatch" data-accent="#e65d9e" aria-label="Rosa"><i style="background:#e65d9e"></i><span>Rosa</span></button>
-      </div>
-      <div class="settings-divider"></div>
-      <div class="settings-heading"><span class="settings-icon"><i class="ti ti-moon-stars"></i></span><div><h2>Apariencia</h2><p>Cambia entre el modo claro y el oscuro sin modificar tu cuenta.</p></div></div>
-      <label class="setting-label" for="settingTheme">Tema</label>
-      <select id="settingTheme" class="field"><option value="light">Claro</option><option value="dark">Oscuro</option></select>
-      <div class="settings-divider"></div>
-      <div class="settings-heading"><span class="settings-icon"><i class="ti ti-device-floppy"></i></span><div><h2>Guardado</h2><p>Los ajustes quedan guardados en este dispositivo</p></div></div>
-      <p class="settings-saved"><i class="ti ti-check"></i> <span id="settingsSavedText">Tus preferencias se guardan automáticamente</span></p>
-      <button class="button button-secondary" id="resetWebSettings" type="button"><i class="ti ti-refresh"></i> Restaurar ajustes</button>
-    </section>
-    <aside class="settings-preview">
-      <span class="eyebrow">VISTA PREVIA</span>
-      <div class="preview-voxel"><div class="preview-block block-a"></div><div class="preview-block block-b"></div><div class="preview-block block-c"></div><div class="preview-block block-d"></div></div>
-      <h3>MichuStudio</h3><p>Así se ven los colores que elegiste. No está nada mal, ¿verdad? ;)</p>
-      <span class="preview-button">Color principal</span>
-    </aside>
-  </div>
-</section>
-<section class="page" id="page-community"><div class="page-intro"><span class="eyebrow" data-i18n="communitySpace">COMUNIDAD MICHUSTUDIO</span><h1 data-i18n="communityTitle">Comunidad</h1><p data-i18n="communityLead">Busca perfiles, gestiona solicitudes de amistad y envía mensajes a otras cuentas.</p></div><div class="community-grid"><section class="panel"><div class="panel-title"><div><span class="eyebrow" data-i18n="directory">DIRECTORIO</span><h2 data-i18n="findPeople">Buscar usuarios</h2></div><i class="ti ti-search" style="font-size:22px;color:#168249"></i></div><form class="search-row" id="userSearchForm"><input id="userSearch" aria-label="Buscar usuario por nombre" maxlength="32" autocomplete="off"><button class="button button-primary" type="submit" data-i18n="search">Buscar</button></form><div id="userResults" class="user-list"><p class="muted small" data-i18n="searchHint">Inicia sesión para buscar usuarios.</p></div></section><section class="panel"><div class="panel-title"><div><span class="eyebrow" data-i18n="yourCircle">TU CÍRCULO</span><h2 data-i18n="friendRequests">Solicitudes</h2></div><button class="text-button" id="refreshRequests" aria-label="Actualizar">↻</button></div><div id="requestsList" class="user-list"><p class="muted small">Inicia sesión para ver tus solicitudes.</p></div><div class="divider-line"></div><div class="panel-title"><h3 data-i18n="yourFriends">Tus amigos</h3><button class="text-button" id="refreshFriends" data-i18n="refresh">Actualizar ↻</button></div><div id="friendsList" class="user-list"><p class="muted small">Inicia sesión para ver tus amigos.</p></div></section></div><section class="panel inbox-panel"><div class="panel-title"><div><span class="eyebrow">MENSAJES DIRECTOS</span><h2 data-i18n="inboxTitle">Tu bandeja</h2></div><button class="text-button" id="refreshMail" aria-label="Actualizar">↻</button></div><p class="muted small" data-i18n="inboxDescription">Mensajes privados entre cuentas de MichuStudio. No son correos electrónicos.</p><div id="inboxList" class="mail-list"><p class="muted small">Inicia sesión para ver tus mensajes.</p></div><form class="mail-compose" id="mailForm"><input id="mailTo" aria-label="Cuenta destinataria" maxlength="80" required><textarea id="mailMessage" aria-label="Mensaje privado" rows="2" maxlength="2000" required></textarea><button class="button button-primary" type="submit" data-i18n="sendMessage">Enviar mensaje ↗</button></form></section></section>
-<section class="page" id="page-account"><div class="page-intro"><span class="eyebrow" data-i18n="accountSpace">TU ESPACIO</span><h1 data-i18n="accountTitle">Mi cuenta :3</h1><p data-i18n="accountLead">Aquí puedes actualizar tus datos y personalizar tu perfil. Este espacio es tuyo.</p></div><div class="account-layout"><section class="panel auth-panel" id="authPanel"><div class="auth-tabs"><button class="auth-tab active" data-auth-mode="login" data-i18n="login">Iniciar sesión</button><button class="auth-tab" data-auth-mode="register" data-i18n="register">Crear cuenta</button></div><form id="authForm"><label for="authUsername" data-i18n="username">Nombre de usuario</label><input id="authUsername" name="username" required minlength="3" maxlength="32" autocomplete="username"><label for="authPassword" data-i18n="password">Contraseña</label><input id="authPassword" name="password" type="password" required minlength="8" maxlength="72" autocomplete="current-password"><div id="registerExtras" hidden><label for="authRegion" data-i18n="regionOptional">Región (opcional, 2 letras)</label><input id="authRegion" aria-label="Región de la cuenta" name="region" maxlength="2"></div><button class="button button-primary button-wide" id="authSubmit" type="submit" data-i18n="login">Iniciar sesión</button><p class="muted small" data-i18n="accountPrivacy">Tu contraseña no aparece en tu perfil. No la compartas con nadie.</p><p id="authNotice" class="notice" aria-live="polite"></p></form></section>
-<section class="panel profile-panel" id="profilePanel" hidden><div class="profile-banner" id="profileBanner"><button class="banner-edit" id="chooseBanner" type="button"><i class="ti ti-photo-edit"></i><span data-i18n="changeBanner">Cambiar banner</span></button></div><div class="profile-main"><div class="avatar-wrap"><div class="profile-avatar" id="profileAvatar">🐱</div><button class="avatar-edit" id="chooseAvatar" type="button" aria-label="Cambiar foto"><i class="ti ti-camera"></i></button></div><div class="profile-summary"><span class="pill" id="profileRole">USER</span><h2 id="profileName">Michu</h2><p id="profileStatus">...</p><button class="button button-soft" id="viewMyProfile" type="button"><i class="ti ti-user-circle"></i> Ver perfil público</button></div><button class="button button-secondary" id="logout" type="button" data-i18n="logout">Cerrar sesión</button></div><form id="profileForm" class="profile-form"><div class="form-two"><div><label for="editUsername" data-i18n="displayName">Nombre visible</label><input id="editUsername" maxlength="32" required></div><div><label for="editStatus" data-i18n="status">Estado</label><input id="editStatus" maxlength="60"></div></div><label for="editDescription" data-i18n="description">Descripción</label><textarea id="editDescription" maxlength="300" rows="3"></textarea><div class="form-two"><div><label for="editRegion" data-i18n="region">Región</label><input id="editRegion" aria-label="Región del perfil" maxlength="2"></div><div><label for="editAccent" data-i18n="accentColor">Color de perfil</label><input id="editAccent" type="color" value="#a5edc7"></div></div><div class="privacy-row"><label><input type="checkbox" id="hideRegion"> <span data-i18n="hideRegion">Ocultar región</span></label><label><input type="checkbox" id="hideOnline"> <span data-i18n="hideOnline">Ocultar estado en línea</span></label></div><button class="button button-primary" type="submit" data-i18n="saveProfile">Guardar cambios</button><p id="profileNotice" class="notice" aria-live="polite"></p></form><div class="account-meta"><span><small data-i18n="accountId">ID de cuenta</small><b id="profileId">—</b></span><span><small data-i18n="memberSince">Miembro desde</small><b id="memberSince">—</b></span><span><small data-i18n="playTime">Tiempo jugado</small><b id="playTime">—</b></span></div><form id="passwordForm" class="password-form"><h3 data-i18n="changePassword">Cambiar contraseña</h3><div class="form-two"><div><label for="currentPassword" data-i18n="currentPassword">Contraseña actual</label><input type="password" id="currentPassword" minlength="8" maxlength="72" required autocomplete="current-password"></div><div><label for="newPassword" data-i18n="newPassword">Nueva contraseña</label><input type="password" id="newPassword" minlength="8" maxlength="72" required autocomplete="new-password"></div></div><button class="button button-secondary" type="submit" data-i18n="updatePassword">Actualizar contraseña</button></form></section></div><input type="file" id="avatarFile" accept="image/png,image/jpeg,image/webp,image/avif" hidden><input type="file" id="bannerFile" accept="image/png,image/jpeg,image/webp,image/avif" hidden></section>
-<footer class="site-footer"><a class="footer-brand" href="#home">✦ MICHUSTUDIO</a><span data-i18n="footerMade">Juegos · Michiverse · proyectos</span><div class="footer-links"><button data-goto="wiki">Wiki</button><button data-goto="news">Novedades</button><button data-goto="forum">Foro</button><button data-goto="account">Mi cuenta</button><button data-goto="settings">Ajustes</button></div><span>© <span id="year"></span> MichuStudio</span></footer>
-</main>
-<nav class="bottom-quicknav" aria-label="Accesos rápidos">
-  <button class="bottom-link active" data-page="home"><i class="ti ti-home-2"></i><span>Inicio</span></button>
-  <button class="bottom-link" data-page="games"><i class="ti ti-device-gamepad-2"></i><span>Juegos</span></button>
-  <button class="bottom-link" data-page="forum"><i class="ti ti-message-circle-2"></i><span>Foro</span></button>
-  <button class="bottom-link" data-page="account"><i class="ti ti-user-circle"></i><span>Cuenta</span></button>
-  <button class="bottom-link" data-page="settings"><i class="ti ti-settings"></i><span>Ajustes</span></button>
-  <button class="bottom-link bottom-create" id="quickCreatePost"><i class="ti ti-plus"></i><span>Publicar</span></button>
-</nav>
-<div id="toast" class="toast" role="status" aria-live="polite"></div>
-<dialog id="messageDialog" class="message-dialog"><div class="dialog-top"><button class="dialog-close" id="dialogClose" aria-label="Cerrar">×</button></div><div id="dialogContent" class="dialog-content"></div></dialog>
-<script>
 'use strict';
-const API='';
-const STORAGE_TOKEN='michustudio_token_v1';
-const STORAGE_USER='michustudio_user_v1';
-const $=id=>document.getElementById(id);
-const WEB_SETTINGS_KEY='michustudio_web_settings_v1';
-let webSettings=loadWebSettings();
-let forumPage=1;
-let forumHasMore=false;
-let forumCategories=[];
-let activeForumCategory='';
-const forumUserCache=new Map();
-function loadWebSettings(){try{return {...{accent:'#0ac85b',theme:'light'},...JSON.parse(localStorage.getItem(WEB_SETTINGS_KEY)||'{}')}}catch{return {accent:'#0ac85b',theme:'light'}}}
-function saveWebSettings(){localStorage.setItem(WEB_SETTINGS_KEY,JSON.stringify(webSettings));applyWebSettings();const note=$('settingsSavedText');if(note)note.textContent='Guardado. Todo quedó como lo configuraste. :)'}
-function applyWebSettings(){const accent=/^#[0-9a-f]{6}$/i.test(webSettings.accent||'')?webSettings.accent:'#0ac85b';document.documentElement.style.setProperty('--custom-accent',accent);document.documentElement.dataset.theme=webSettings.theme==='dark'?'dark':'light';const color=$('settingAccent');if(color){color.value=accent;$('settingAccentValue').textContent=accent.toUpperCase()}const theme=$('settingTheme');if(theme)theme.value=document.documentElement.dataset.theme}
 
-const translations={
-'es':{navHome:'Inicio',navGames:'Juegos',navWiki:'Wiki',navNews:'Novedades',navForum:'Foro',navCommunity:'Comunidad',account:'Mi cuenta :3',heroEyebrow:'UN PEQUEÑO ESTUDIO INDEPENDIENTE',heroLead:'Este es el rincón donde reúno mis juegos y proyectos. Explora Michiverse, revisa las novedades y descubre qué estoy preparando. Hay algunas sorpresas... y probablemente algún bug. :P',exploreGames:'Ver juegos',meetProjects:'Ver novedades',heroNote:'Creado por MichuStudio. Los bugs no forman parte del diseño... aunque a veces se comporten como si lo fueran. :/',featureGames:'Juegos y descargas',featureGamesText:'Descubre los juegos, consulta sus versiones y revisa cómo avanza cada proyecto.',featureWiki:'La Wiki',featureWikiText:'Información sobre Michiverse y algunos detalles de su desarrollo.',featureForum:'El foro',featureForumText:'Comparte ideas, haz preguntas y comenta las publicaciones de la comunidad.',bannerTitle:'Todo se construye paso a paso.',bannerText:'Aquí encontrarás las versiones disponibles y las funciones que siguen en desarrollo. No habrá botones de descarga que no lleven a ninguna parte. :P',seeNews:'Ver novedades ↗',downloadZone:'JUEGOS / DESCARGAS',gamesTitle:'Juegos de MichuStudio',gamesLead:'Aquí encontrarás los juegos publicados y los proyectos que siguen en desarrollo. Abre cada ficha para conocer más detalles.',downloadNote:'La descarga aparecerá cuando haya un archivo disponible. Mientras tanto, el botón permanecerá desactivado.',wikiTitle:'Wiki de Michiverse',wikiLead:'Consulta información sobre el juego, su desarrollo y algunos detalles técnicos.',newsDesk:'NOVEDADES',newsTitle:'Novedades de MichuStudio',newsLead:'Noticias sobre los proyectos y los cambios del sitio.',newsOneTitle:'Michiverse sigue creciendo',newsOneText:'El juego continúa en desarrollo. La idea es crear un mundo de bloques con identidad propia y un buen rendimiento en Android.',newsDate:'Nota de desarrollo',newsTwoTitle:'El sitio también evoluciona',newsTwoText:'Aquí encontrarás las fichas de los juegos, sus descargas, la Wiki y las funciones de la comunidad.',forumTitle:'El foro de MichuStudio',forumLead:'Un espacio para compartir ideas, hacer preguntas y conversar sobre los proyectos.',loginToPost:'Inicia sesión para publicar. Los fantasmas todavía no tienen cuenta. :0',publish:'Publicar ↗',recentPosts:'Publicaciones recientes',refresh:'Actualizar ↻',loadingPosts:'Cargando publicaciones...',communitySpace:'COMUNIDAD MICHUSTUDIO',communityTitle:'Comunidad',communityLead:'Explora perfiles, gestiona solicitudes de amistad y envía mensajes a otras cuentas.',directory:'DIRECTORIO',findPeople:'Buscar usuarios',search:'Buscar',searchHint:'Inicia sesión para buscar usuarios.',yourCircle:'TU CÍRCULO',friendRequests:'Solicitudes',yourFriends:'Tus amigos',inboxTitle:'Tu bandeja de mensajes',inboxDescription:'Mensajes privados entre cuentas de MichuStudio. No son correos electrónicos.',sendMessage:'Enviar mensaje ↗',accountSpace:'TU ESPACIO',accountTitle:'Mi cuenta :3',accountLead:'Aquí puedes actualizar tus datos y personalizar tu perfil. Este espacio es tuyo.',login:'Iniciar sesión',register:'Crear cuenta',username:'Nombre de usuario',password:'Contraseña',regionOptional:'Región (opcional, 2 letras)',accountPrivacy:'Tu contraseña no aparece en tu perfil. No la compartas con nadie.',changeBanner:'Cambiar banner',logout:'Cerrar sesión',displayName:'Nombre visible',status:'Estado',description:'Descripción',region:'Región',accentColor:'Color del perfil',hideRegion:'Ocultar región',hideOnline:'Ocultar estado en línea',saveProfile:'Guardar cambios',accountId:'ID de cuenta',memberSince:'Miembro desde',playTime:'Tiempo jugado',changePassword:'Cambiar contraseña',currentPassword:'Contraseña actual',newPassword:'Nueva contraseña',updatePassword:'Actualizar contraseña',footerMade:'Juegos · Michiverse · proyectos'},
-'pt-BR':{navHome:'Início',navGames:'Jogos',navWiki:'Wiki',navNews:'Novidades',navForum:'Fórum',navCommunity:'Comunidade',account:'Minha conta :3',heroEyebrow:'UM PEQUENO ESTÚDIO INDEPENDENTE',heroLead:'Este é o espaço dos meus jogos e projetos. Aqui você pode conhecer Michiverse, ver novidades e acompanhar o que estou preparando.',exploreGames:'Ver jogos',meetProjects:'Ver novidades',heroNote:'Feito pela MichuStudio. Os bugs não são decoração, mesmo quando tentam ser.',featureGames:'Jogos e downloads',featureGamesText:'Veja os jogos, suas versões e quando estarão prontos.',featureWiki:'A Wiki',featureWikiText:'Informações sobre Michiverse e alguns detalhes de desenvolvimento.',featureForum:'O fórum',featureForumText:'Compartilhe ideias, faça perguntas e comente publicações.',bannerTitle:'Tudo acontece aos poucos.',bannerText:'Aqui você verá as versões disponíveis e os recursos que ainda estão em desenvolvimento.',seeNews:'Ver novidades ↗',downloadZone:'JOGOS / DOWNLOADS',gamesTitle:'Jogos da MichuStudio',gamesLead:'Aqui estão os jogos publicados e os que ainda estão em desenvolvimento. Abra a ficha para ver mais informações.',downloadNote:'O download só aparecerá quando houver um arquivo publicado.',wikiTitle:'Wiki do Michiverse',wikiLead:'Informações sobre o jogo, seu desenvolvimento e alguns detalhes técnicos.',newsDesk:'NOVIDADES',newsTitle:'O que acontece na MichuStudio',newsLead:'Notas sobre os projetos e mudanças no site.',newsOneTitle:'Michiverse continua crescendo',newsOneText:'O jogo continua em desenvolvimento. A ideia é criar um mundo de blocos com estilo próprio para Android.',newsDate:'Nota de desenvolvimento',newsTwoTitle:'O site também está mudando',newsTwoText:'O site reúne páginas dos jogos, downloads, Wiki e recursos da comunidade.',forumTitle:'Fórum da MichuStudio',forumLead:'Um espaço para compartilhar ideias, fazer perguntas e conversar sobre os projetos.',loginToPost:'Entre na conta para publicar.',publish:'Publicar ↗',recentPosts:'Publicações recentes',refresh:'Atualizar ↻',loadingPosts:'Carregando publicações...',communitySpace:'COMUNIDADE MICHUSTUDIO',communityTitle:'Comunidade',communityLead:'Procure perfis, gerencie pedidos de amizade e envie mensagens.',directory:'DIRETÓRIO',findPeople:'Buscar usuários',search:'Buscar',searchHint:'Entre na conta para buscar usuários.',yourCircle:'SEU CÍRCULO',friendRequests:'Pedidos',yourFriends:'Seus amigos',inboxTitle:'Sua caixa de entrada',inboxDescription:'Mensagens privadas entre contas MichuStudio.',sendMessage:'Enviar mensagem ↗',accountSpace:'SEU ESPAÇO',accountTitle:'Sua conta :3',accountLead:'Aqui você pode alterar seus dados e personalizar seu perfil.',login:'Entrar',register:'Criar conta',username:'Nome de usuário',password:'Senha',regionOptional:'Região (opcional, 2 letras)',accountPrivacy:'Sua senha não aparece no perfil. Não compartilhe com ninguém.',changeBanner:'Trocar banner',logout:'Sair da conta',displayName:'Nome visível',status:'Status',description:'Descrição',region:'Região',accentColor:'Cor do perfil',hideRegion:'Ocultar região',hideOnline:'Ocultar status online',saveProfile:'Salvar alterações',accountId:'ID da conta',memberSince:'Membro desde',playTime:'Tempo jogado',changePassword:'Alterar senha',currentPassword:'Senha atual',newPassword:'Nova senha',updatePassword:'Atualizar senha',footerMade:'Jogos · Michiverse · projetos'},
-'en':{navHome:'Home',navGames:'Games',navWiki:'Wiki',navNews:'Updates',navForum:'Forum',navCommunity:'Community',account:'My account :3',heroEyebrow:'A SMALL INDEPENDENT STUDIO',heroLead:'This is where my games and projects live. Explore Michiverse, check the latest updates, and see what I am working on.',exploreGames:'View games',meetProjects:'Latest updates',heroNote:'Made by MichuStudio. Bugs are not decoration, even when they try to be.',featureGames:'Games & downloads',featureGamesText:'See the games, their versions, and when they are ready.',featureWiki:'The Wiki',featureWikiText:'Michiverse information and a few development notes.',featureForum:'The forum',featureForumText:'Share ideas, ask questions, and comment on posts.',bannerTitle:'Things take time.',bannerText:'You will find available releases and features that are still being developed here.',seeNews:'See updates ↗',downloadZone:'GAMES / DOWNLOADS',gamesTitle:'MichuStudio games',gamesLead:'Here are published games and projects still in development. Open a game card to learn more.',downloadNote:'A download will appear only when a file has been published.',wikiTitle:'Michiverse Wiki',wikiLead:'Information about the game, its development, and a few technical details.',newsDesk:'UPDATES',newsTitle:'What is happening at MichuStudio',newsLead:'Notes about the projects and website changes.',newsOneTitle:'Michiverse keeps growing',newsOneText:'The game is still in development, with a block world and its own style for Android.',newsDate:'Development note',newsTwoTitle:'The website is changing too',newsTwoText:'The website brings together game pages, downloads, the Wiki, and community features.',forumTitle:'The MichuStudio forum',forumLead:'A place to share ideas, ask questions, and talk about the projects',loginToPost:'Sign in to post.',publish:'Publish ↗',recentPosts:'Recent posts',refresh:'Refresh ↻',loadingPosts:'Loading posts...',communitySpace:'MICHUSTUDIO COMMUNITY',communityTitle:'Community',communityLead:'Find profiles, manage friend requests, and send messages to other accounts.',directory:'DIRECTORY',findPeople:'Find users',search:'Search',searchHint:'Sign in to search for users.',yourCircle:'YOUR CIRCLE',friendRequests:'Requests',yourFriends:'Your friends',inboxTitle:'Your inbox',inboxDescription:'Private messages between MichuStudio accounts.',sendMessage:'Send message ↗',accountSpace:'YOUR SPACE',accountTitle:'Your account :3',accountLead:'Change your details and customize your profile here.',login:'Sign in',register:'Create account',username:'Username',password:'Password',regionOptional:'Region (optional, 2 letters)',accountPrivacy:'Your password is not shown on your profile. Do not share it.',changeBanner:'Change banner',logout:'Sign out',displayName:'Display name',status:'Status',description:'Description',region:'Region',accentColor:'Profile color',hideRegion:'Hide region',hideOnline:'Hide online status',saveProfile:'Save changes',accountId:'Account ID',memberSince:'Member since',playTime:'Play time',changePassword:'Change password',currentPassword:'Current password',newPassword:'New password',updatePassword:'Update password',footerMade:'Games · Michiverse · projects'}
-};
-let language=localStorage.getItem('michustudio_lang')||'es';
-let token=localStorage.getItem(STORAGE_TOKEN)||'';
-let currentUser=readStoredUser();
-let authMode='login';
-let toastTimer=0;
-let gameList=[];
-const gameById=new Map();
-function readStoredUser(){try{return JSON.parse(localStorage.getItem(STORAGE_USER)||'null')}catch{return null}}
-function t(key){return (translations[language]||translations.es)[key]||translations.es[key]||key}
-function applyLanguage(){document.documentElement.lang=language==='pt-BR'?'pt-BR':language;document.querySelectorAll('[data-i18n]').forEach(el=>{const value=t(el.dataset.i18n);if(value)el.textContent=value});localStorage.setItem('michustudio_lang',language)}
-function showToast(message){const box=$('toast');box.textContent=String(message||'');clearTimeout(toastTimer);toastTimer=setTimeout(()=>box.textContent='',4200)}
-function esc(value){return String(value??'').replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]))}
-function photoPath(value){const raw=String(value||'').trim().replace(/\\/g,'/');if(!raw||/^https?:\/\//i.test(raw)||raw.startsWith('data:'))return'';const stripped=raw.replace(/^\/?Photos\//i,'').replace(/^\/+/, '');const parts=stripped.split('/');if(parts.some(part=>!part||part==='.'||part==='..'))return'';return'/Photos/'+parts.map(encodeURIComponent).join('/')}
-function accountAssetUrl(value){const raw=String(value||'').trim();if(!raw)return'';if(/^https?:\/\//i.test(raw))return raw;return raw.startsWith('/')?raw:'/'+raw.replace(/^\/+/, '')}
-function safeDownload(value){const raw=String(value||'').trim();if(!raw)return'';if(/^https:\/\//i.test(raw))return raw;if(raw.startsWith('/')&&!raw.startsWith('//'))return raw;if(!/^[a-zA-Z0-9._/-]+$/.test(raw)||raw.split('/').includes('..'))return'';return'/'+raw.replace(/^\/+/, '')}
-async function api(path,options={}){const headers=new Headers(options.headers||{});if(token)headers.set('Authorization','Bearer '+token);if(options.body&&!(options.body instanceof FormData)&&!headers.has('Content-Type'))headers.set('Content-Type','application/json');let response;try{response=await fetch(API+path,{...options,headers,credentials:'same-origin'})}catch{throw new Error('No se pudo conectar con el servidor. Revisa tu conexión y prueba de nuevo.')}let data={};try{const body=await response.text();try{data=JSON.parse(body)}catch{}}catch{}if(!response.ok){if(response.status===401&&token){token='';currentUser=null;localStorage.removeItem(STORAGE_TOKEN);localStorage.removeItem(STORAGE_USER);localStorage.removeItem('michustudio_session_saved_at');renderAccountState()}let fallback=`El servidor respondió con el error ${response.status}.`;if(response.status===404)fallback='El servidor no reconoce esa ruta. Comprueba que la versión correcta esté publicada.';if(response.status===502||response.status===503)fallback='El servidor no está respondiendo ahora mismo. Prueba de nuevo más tarde.';throw new Error(data.error||fallback)}return data}
-function saveUser(user){currentUser=user;localStorage.setItem(STORAGE_USER,JSON.stringify(user));renderAccountState()}
-function persistSession(data){if(data&&typeof data.token==='string'&&data.token){token=data.token;localStorage.setItem(STORAGE_TOKEN,token);localStorage.setItem('michustudio_session_saved_at',String(Date.now()))}}
-function avatarUrl(user){
-  if(!user)return '';
-  const candidates=[user.profile_picture,user.profilePicture,user.profile_image,user.avatar_url,user.avatarUrl,user.avatar,user.picture,user.photo,user.image];
-  const raw=candidates.find(value=>typeof value==='string'&&value.trim());
-  if(raw){const value=String(raw).trim();if(/^https?:\/\//i.test(value)||value.startsWith('data:')||value.startsWith('blob:'))return value;return accountAssetUrl(value)}
-  const id=user.id||user.user_id||user.account_id;
-  return id?'/users/'+encodeURIComponent(id)+'/avatar':'';
-}
-function avatarMarkup(user,className='account-avatar'){
-  const src=avatarUrl(user);
-  const username=String(user?.username||'Usuario');
-  const initial=esc(username.trim().slice(0,1).toUpperCase()||'M');
-  if(!src)return '<span class="'+className+' avatar-fallback">'+initial+'</span>';
-  return `<span class="${className}" data-fallback="${initial}"><img src="${esc(src)}" alt="Foto de ${esc(username)}" loading="lazy" onerror="this.remove();this.parentElement.classList.add('avatar-fallback');this.parentElement.textContent=this.parentElement.dataset.fallback"></span>`;
-}
-function go(page){document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id==='page-'+page));document.querySelectorAll('.nav-link').forEach(el=>el.classList.toggle('active',el.dataset.page===page));document.querySelectorAll('.bottom-link[data-page]').forEach(el=>el.classList.toggle('active',el.dataset.page===page));const nav=document.querySelector('.main-nav');if(nav)nav.classList.remove('open');$('mobileMenu').setAttribute('aria-expanded','false');if(page==='account')refreshMe().catch(()=>{});if(page==='community'&&token){loadRequests();loadFriends();loadMail()}if(page==='forum')loadForum();if(page==='games')loadGames();window.scrollTo({top:0,behavior:'smooth'})}
-function renderAccountState(){const logged=!!token&&!!currentUser;$('openAccount').textContent=logged?(currentUser.username||t('account')):t('account');$('authPanel').hidden=logged;$('profilePanel').hidden=!logged;$('forumAuthHint').textContent=logged?(currentUser.username||''):t('loginToPost');if(!logged)return;$('profileName').textContent=currentUser.username||'Michu';$('profileRole').textContent=String(currentUser.role||'User').toUpperCase();$('profileStatus').textContent=currentUser.statusText||currentUser.description||'Miembro';$('editUsername').value=currentUser.username||'';$('editStatus').value=currentUser.statusText||'';$('editDescription').value=currentUser.description||'';$('editRegion').value=currentUser.region||'';$('editAccent').value=/^#[0-9a-f]{6}$/i.test(currentUser.accentColor||'')?currentUser.accentColor:'#a5edc7';$('hideRegion').checked=!!currentUser.hideRegion;$('hideOnline').checked=!!currentUser.hideOnline;$('profileId').textContent=currentUser.id||'—';$('memberSince').textContent=currentUser.memberSince?new Date(currentUser.memberSince).toLocaleDateString():'—';$('playTime').textContent=Number(currentUser.hoursPlayed||0)+' h';const avatar=avatarUrl(currentUser);$('profileAvatar').innerHTML=avatarMarkup(currentUser,'profile-avatar-image');const composeAvatar=$('composeAvatar');if(composeAvatar)composeAvatar.innerHTML=avatarMarkup(currentUser,'compose-avatar-image');$('publishPost').disabled=!logged;const banner=currentUser.profile_banner||currentUser.banner_picture||currentUser.bannerUrl||currentUser.banner||'';$('profileBanner').style.backgroundImage=banner?`url("${String(banner).replace(/["\\]/g,'')}")`:'';$('profileBanner').style.backgroundSize='cover';$('profileBanner').style.backgroundPosition='center'}
-function setAuthMode(mode){authMode=mode;document.querySelectorAll('.auth-tab').forEach(el=>el.classList.toggle('active',el.dataset.authMode===mode));$('registerExtras').hidden=mode!=='register';$('authSubmit').textContent=t(mode==='login'?'login':'register');$('authPassword').autocomplete=mode==='login'?'current-password':'new-password';$('authNotice').textContent=''}
-async function submitAuth(event){event.preventDefault();const username=$('authUsername').value.trim();const password=$('authPassword').value;const body={username,password};if(authMode==='register'){body.region=$('authRegion').value.trim().toUpperCase();if(body.region&&!/^[A-Z]{2}$/.test(body.region)){showToast('La región debe tener 2 letras, por ejemplo AR.');return}}try{$('authSubmit').disabled=true;const data=await api(authMode==='login'?'/login':'/register',{method:'POST',body:JSON.stringify(body)});persistSession(data);saveUser(data.user);$('authPassword').value='';showToast(authMode==='login'?'Sesión iniciada.':'Cuenta creada. ¡Bienvenido!');if(data.accountKeyGenerated&&data.accountKey)showAccountKey(data.accountKey);await Promise.allSettled([loadRequests(),loadFriends(),loadMail()]);go('account')}catch(error){$('authNotice').textContent=error.message;showToast(error.message)}finally{$('authSubmit').disabled=false}}
-function showAccountKey(key){$('dialogContent').innerHTML=`<span class="pill">SEGURIDAD DE CUENTA</span><h2>Guarda tu Account Key</h2><p>Esta clave solo aparece al crear la cuenta. Guárdala en un lugar seguro por si alguna integración del juego todavía la necesita.</p><input id="accountKeyValue" readonly value="${esc(key)}"><button id="copyAccountKey" class="button button-primary" style="margin-top:12px">Copiar clave</button>`;$('messageDialog').showModal();$('copyAccountKey').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(key);showToast('Clave copiada.')}catch{$('accountKeyValue').select();showToast('Selecciona y copia la clave manualmente.')}})}
-async function refreshMe(){if(!token)return;try{const data=await api('/auth/me');if(data.user)saveUser(data.user)}catch(error){if(token&&error.message)showToast(error.message)}}
-async function submitProfile(event){event.preventDefault();if(!token||!currentUser)return showToast('Primero inicia sesión.');const region=$('editRegion').value.trim().toUpperCase();if(region&&!/^[A-Z]{2}$/.test(region))return showToast('La región debe tener 2 letras, por ejemplo AR.');const body={userId:currentUser.id,username:$('editUsername').value.trim(),statusText:$('editStatus').value.trim(),description:$('editDescription').value,region,accentColor:$('editAccent').value.toUpperCase(),hideRegion:$('hideRegion').checked,hideOnline:$('hideOnline').checked};try{const data=await api('/profile/update',{method:'POST',body:JSON.stringify(body)});saveUser(data.user);$('profileNotice').textContent='Perfil actualizado.';showToast('¡Cambios guardados!')}catch(error){$('profileNotice').textContent=error.message;showToast(error.message)}}
-async function uploadImage(kind,file){if(!file)return;if(!token||!currentUser)return showToast('Primero inicia sesión.');if(!['image/png','image/jpeg','image/webp','image/avif'].includes(file.type))return showToast('Usa una imagen PNG, JPG, WebP o AVIF.');if(file.size>5*1024*1024)return showToast('La imagen pesa más de 5 MB. Elige una más ligera.');const body=new FormData();body.append(kind,file);try{showToast(kind==='avatar'?'Subiendo foto...':'Subiendo banner...');const data=await api(`/users/${encodeURIComponent(currentUser.id)}/${kind}`,{method:'POST',body});saveUser(data.user);showToast(kind==='avatar'?'Foto de perfil actualizada.':'Banner actualizado.')}catch(error){showToast(error.message)}finally{$(kind==='avatar'?'avatarFile':'bannerFile').value=''}}
-async function logout(){if(!token)return;try{await api('/logout',{method:'POST',body:JSON.stringify({userId:currentUser?.id||''})})}catch{}token='';currentUser=null;localStorage.removeItem(STORAGE_TOKEN);localStorage.removeItem(STORAGE_USER);localStorage.removeItem('michustudio_session_saved_at');renderAccountState();showToast('Sesión cerrada.')}
-async function changePassword(event){event.preventDefault();if(!currentUser)return showToast('Primero inicia sesión.');try{const data=await api('/account/password',{method:'POST',body:JSON.stringify({userId:currentUser.id,currentPassword:$('currentPassword').value,newPassword:$('newPassword').value})});persistSession(data);$('passwordForm').reset();showToast('Contraseña actualizada.')}catch(error){showToast(error.message)}}
-function userRow(user,actions=''){
-  const id=esc(user.id);
-  const online=user.online?'<small class="online-state">● En línea</small>':'<small class="offline-state">○ Desconectado</small>';
-  return `<article class="user-row" data-user-id="${id}" tabindex="0" role="button" aria-label="Ver perfil de ${esc(user.username||'Usuario')}"><div class="user-row-avatar">${avatarMarkup(user,'user-avatar-image')}</div><div class="user-row-main"><b>${esc(user.username||'Usuario')}</b><small>ID · ${id}</small>${online}</div><div class="user-row-actions">${actions}</div></article>`
-}
-async function searchUsers(){const query=$('userSearch').value.trim();const host=$('userResults');if(!token||!currentUser){host.innerHTML='<p class="muted small">Inicia sesión para buscar usuarios.</p>';return}host.innerHTML='<div class="empty-state">Buscando...</div>';try{const data=await api('/users?q='+encodeURIComponent(query)+'&limit=60');const users=(data.users||[]).filter(user=>user.id!==currentUser.id);if(!users.length){host.innerHTML='<p class="muted small">No encontramos cuentas con ese nombre.</p>';return}host.innerHTML=users.map(user=>userRow(user,`<button class="mini-button" data-action="view-profile" data-id="${esc(user.id)}">Ver perfil</button><button class="mini-button" data-action="add-friend" data-id="${esc(user.id)}">Enviar solicitud</button><button class="mini-button" data-action="message-user" data-id="${esc(user.id)}">Mensaje</button>`)).join('')}catch(error){host.innerHTML=`<p class="muted small">${esc(error.message)}</p>`}}
-async function friendAction(action,friendId){if(!currentUser)return showToast('Primero inicia sesión.');try{await api('/friends/'+action,{method:'POST',body:JSON.stringify({userId:currentUser.id,friendId})});showToast(action==='request'?'Solicitud enviada.':action==='accept'?'Solicitud aceptada.':action==='decline'?'Solicitud rechazada.':'Amistad actualizada.');await Promise.allSettled([loadRequests(),loadFriends(),searchUsers()])}catch(error){showToast(error.message)}}
-async function loadRequests(){const host=$('requestsList');if(!token||!currentUser){host.innerHTML='<p class="muted small">Inicia sesión para ver tus solicitudes.</p>';return}try{const data=await api('/friends/requests');const incoming=data.incoming||[];const outgoing=data.outgoing||[];if(!incoming.length&&!outgoing.length){host.innerHTML='<p class="muted small">No tienes solicitudes pendientes.</p>';return}host.innerHTML=incoming.map(user=>userRow(user,`<button class="mini-button" data-action="accept-friend" data-id="${esc(user.id)}">Aceptar</button><button class="mini-button" data-action="decline-friend" data-id="${esc(user.id)}">Rechazar</button>`)).join('')+outgoing.map(user=>userRow(user,'<span class="pill">PENDIENTE</span>')).join('')}catch(error){host.innerHTML=`<p class="muted small">${esc(error.message)}</p>`}}
-async function loadFriends(){const host=$('friendsList');if(!token||!currentUser){host.innerHTML='<p class="muted small">Inicia sesión para ver tus amigos.</p>';return}try{const data=await api('/auth/me');if(data.user)saveUser(data.user);const ids=Array.isArray((data.user||currentUser).friends)?(data.user||currentUser).friends:[];if(!ids.length){host.innerHTML='<p class="muted small">Todavía no tienes amigos. Busca una cuenta para empezar.</p>';return}const profiles=await Promise.all(ids.slice(0,200).map(id=>api('/users/'+encodeURIComponent(id)).catch(()=>null)));const users=profiles.map(result=>result&&result.user).filter(Boolean);host.innerHTML=users.map(user=>userRow(user,`<button class="mini-button" data-action="view-profile" data-id="${esc(user.id)}">Ver perfil</button><button class="mini-button" data-action="message-user" data-id="${esc(user.id)}">Mensaje</button><button class="mini-button" data-action="remove-friend" data-id="${esc(user.id)}">Quitar amigo</button>`)).join('')}catch(error){host.innerHTML=`<p class="muted small">${esc(error.message)}</p>`}}
-async function loadMail(){const host=$('inboxList');if(!token||!currentUser){host.innerHTML='<p class="muted small">Inicia sesión para ver tus mensajes.</p>';return}try{const data=await api('/mail/'+encodeURIComponent(currentUser.id)+'?limit=100');const mails=data.mails||[];if(!mails.length){host.innerHTML='<p class="muted small">Tu bandeja está vacía.</p>';return}host.innerHTML=mails.map(mail=>`<article class="mail-item ${mail.isRead?'':'unread'}"><div><b>${esc(mail.type==='Warning'?'⚠ Administración':'✉ '+(mail.fromUserId||'Usuario'))}</b><p>${esc(mail.message)}</p><small>${esc(new Date(mail.createdAt).toLocaleString())} · ID ${esc(mail.id)}</small></div><div>${mail.isRead?'':'<button class="mini-button" data-action="read-mail" data-id="'+esc(mail.id)+'">Marcar leído</button>'}</div></article>`).join('')}catch(error){host.innerHTML=`<p class="muted small">${esc(error.message)}</p>`}}
-async function sendMail(event){event.preventDefault();if(!currentUser)return showToast('Primero inicia sesión.');const toUserId=$('mailTo').value.trim(),message=$('mailMessage').value.trim();if(!toUserId||!message)return showToast('Completa el destinatario y el mensaje.');try{await api('/mail/send',{method:'POST',body:JSON.stringify({userId:currentUser.id,toUserId,type:'Normal',message})});$('mailMessage').value='';showToast('Mensaje enviado.');await loadMail()}catch(error){showToast(error.message)}}
-async function viewProfile(id){
-  try{
-    const data=await api('/users/'+encodeURIComponent(id));
-    const user=data.user||data;
-    forumUserCache.set(String(user.id||id),user);
-    const name=esc(user.username||'Usuario');
-    const avatar=avatarUrl(user);
-    const banner=accountAssetUrl(user.profile_banner||user.banner_picture||user.bannerUrl||user.banner||'');
-    const region=user.hideRegion?'':(user.region||'');
-    const onlineVisible=!user.hideOnline;
-    const online=onlineVisible?`<span class="pill">${user.online?'En línea':'Desconectado'}</span>`:'';
-    const avatarNode=avatar?`<img class="public-profile-avatar" src="${esc(avatar)}" alt="Foto de ${name}" onerror="this.outerHTML='<span class=\"public-profile-avatar avatar-fallback\">${esc((user.username||'M').slice(0,1).toUpperCase())}</span>'">`:`<span class="public-profile-avatar avatar-fallback">${esc((user.username||'M').slice(0,1).toUpperCase())}</span>`;
-    $('dialogContent').innerHTML=`<article class="public-profile"><div class="public-profile-banner">${banner?`<img src="${esc(banner)}" alt="Banner de ${name}" onerror="this.remove()">`:''}</div><div class="public-profile-heading">${avatarNode}<div class="public-profile-name"><span class="pill">${esc(user.role||'Miembro')}</span> ${online}<h2>${name}</h2><p>${esc(user.statusText||'')}</p></div><button class="button button-secondary" data-action="message-user" data-id="${esc(user.id||id)}">Mensaje ↗</button></div><div class="public-profile-body"><h3>Sobre mí</h3><p>${esc(user.description||'Todavía no hay una descripción. Este perfil guarda sus secretos. :P')}</p><div class="public-profile-stats"><div><small>Miembro desde</small><b>${user.memberSince?esc(new Date(user.memberSince).toLocaleDateString()):'—'}</b></div><div><small>Tiempo jugado</small><b>${user.hoursPlayed!==undefined?esc(user.hoursPlayed+' h'):'—'}</b></div><div><small>Región</small><b>${esc(region||'No visible')}</b></div></div></div></article>`;
-    $('messageDialog').showModal();
-  }catch(error){showToast(error.message)}
-}
-function gameName(game){return String(game.name||game.title||game.id||'Juego')}
-function gameImage(game){return isMichiverseApkIcon(game)?'':photoPath(game.image||game.cover||game.thumbnail||'')}
-function isMichiverseApkIcon(game){const raw=String(game.image||game.cover||game.thumbnail||'').split(/[?#]/,1)[0];return /(?:^|\/)michiverse\.png$/i.test(raw)}
-function gameRelease(game){return String(game.release||game.releaseDate||game.date||'Por anunciar')}
-function gameDescription(game){return String(game.description||'Todavía no hay una descripción para este juego.')}
-function renderGameCard(game){const id=esc(game.id||gameName(game));const image=gameImage(game);const name=gameName(game);const type=String(game.type||game.platform||'JUEGO');const release=gameRelease(game);const available=game.available===true&&!!safeDownload(game.download);const download= safeDownload(game.download);return `<article class="game-card"><div class="game-cover ${image?'has-image':''}">${image?`<img src="${esc(image)}" alt="Portada de ${esc(name)}" loading="lazy" onerror="this.remove();this.parentElement.classList.remove('has-image')">`:''}<span class="pixel-mark">${esc(String(game.mark||'MS').slice(0,8))}</span></div><div class="game-card-body"><span class="pill">${esc(type)}</span><h3>${esc(name)}</h3><div class="game-meta"><span class="tag">Release: ${esc(release)}</span>${game.version?`<span class="tag">${esc(game.version)}</span>`:''}</div><p>${esc(gameDescription(game))}</p><div class="game-actions"><button class="button button-secondary" type="button" data-game-info="${id}">Más información</button>${available?`<a class="button button-primary" href="${esc(download)}" download>Descargar <i class="ti ti-download"></i></a>`:`<button class="button button-primary" type="button" disabled>Descarga próximamente</button>`}</div></div></article>`}
-function renderGameDetails(game){const section=$('gameDetailSection');const image=isMichiverseApkIcon(game)?'':gameImage(game);const name=gameName(game);const type=String(game.type||game.platform||'Juego');const download=safeDownload(game.download);const available=game.available===true&&!!download;const features=Array.isArray(game.features)?game.features.filter(item=>typeof item==='string'&&item.trim()):[];const requirements=String(game.requirements||game.systemRequirements||'Por confirmar');const version=String(game.version||'Por confirmar');const platform=String(game.platform||'Android');const longDescription=String(game.longDescription||game.details||gameDescription(game));section.innerHTML=`<div class="game-detail-head"><div><span class="eyebrow">FICHA DEL JUEGO</span><h2>${esc(name)} <span class="gradient-text">• ${esc(type)}</span></h2><div class="game-meta"><span class="tag">Release: ${esc(gameRelease(game))}</span><span class="tag">${esc(platform)}</span></div></div><button class="text-button" type="button" id="closeGameDetails">Cerrar ficha ×</button></div><div class="game-detail-layout ${image?'has-image':'no-image'}">${image?`<div class="game-detail-image"><img src="${esc(image)}" alt="Imagen de ${esc(name)}" onerror="this.remove()"></div>`:''}<div class="game-detail-copy"><p>${esc(longDescription)}</p><div class="game-facts"><div><small>Versión</small><b>${esc(version)}</b></div><div><small>Plataforma</small><b>${esc(platform)}</b></div><div><small>Tipo</small><b>${esc(type)}</b></div><div><small>Fecha de lanzamiento</small><b>${esc(gameRelease(game))}</b></div><div><small>Requisitos</small><b>${esc(requirements)}</b></div><div><small>Estado</small><b>${game.available===true?'Disponible':'En desarrollo / próximamente'}</b></div></div>${features.length?`<h3>¿Qué puedes encontrar?</h3><ul>${features.map(feature=>`<li>${esc(feature)}</li>`).join('')}</ul>`:''}<div class="game-actions">${available?`<a class="button button-primary" href="${esc(download)}" download>Descargar ${esc(type)} <i class="ti ti-download"></i></a>`:`<button class="button button-primary" disabled>Descarga próximamente</button>`}</div></div></div>`;section.hidden=false;$('closeGameDetails').addEventListener('click',()=>{section.hidden=true})}
-async function loadGames(){const host=$('gamesList');host.innerHTML='<div class="empty-state">Cargando juegos...</div>';try{const response=await fetch('/Juegos.json',{cache:'no-store'});if(!response.ok)throw new Error(`HTTP ${response.status}`);const data=await response.json();const games=Array.isArray(data)?data:(Array.isArray(data.games)?data.games:[]);if(!games.length)throw new Error('No hay juegos publicados en Juegos.json.');gameList=games;gameById.clear();games.forEach(game=>gameById.set(String(game.id||gameName(game)),game));host.innerHTML=games.map(renderGameCard).join('');const featured=games.find(game=>String(game.id).toLowerCase()==='michiverse')||games[0];const heroImage=isMichiverseApkIcon(featured)?'':gameImage(featured);if(heroImage){$('heroGameImage').src=heroImage;$('heroGameImage').hidden=false}else{$('heroGameImage').removeAttribute('src');$('heroGameImage').hidden=true}renderGameDetails(featured)}catch(error){gameList=[];host.innerHTML=`<div class="empty-state">No pude cargar Juegos.json. Comprueba que el archivo esté junto a Main.html y server.js. <small>${esc(error.message)}</small></div>`;$('gameDetailSection').hidden=false;$('gameDetailSection').innerHTML='<div class="empty-state">La información adicional de este juego no está disponible.</div>'}}
-function forumDate(value){const date=new Date(value);return Number.isNaN(date.getTime())?'Hace un rato':date.toLocaleString('es',{dateStyle:'medium',timeStyle:'short'})}
-function forumMediaUrl(image){if(image&&image.id)return '/forum/api/media/'+encodeURIComponent(image.id);const raw=String(image?.url||'');return raw.startsWith('/api/')?'/forum'+raw:''}
-async function forumUser(id){const key=String(id||'');if(!key)return null;if(forumUserCache.has(key))return forumUserCache.get(key);try{const data=await api('/users/'+encodeURIComponent(key));const user=data.user||data;forumUserCache.set(key,user);return user}catch{return null}}
-function forumAvatar(user){if(!user)return '<span class="social-avatar-fallback">?</span>';const url=avatarUrl(user);const initial=esc((user.username||'M').trim().slice(0,1).toUpperCase());return url?`<img src="${esc(url)}" alt="" loading="lazy" onerror="this.outerHTML='<span class=\\"social-avatar-fallback\\">${initial}</span>'">`:`<span class="social-avatar-fallback">${initial}</span>`}
-function renderForumPoll(post){const poll=post.poll;if(!poll||!Array.isArray(poll.options)||!poll.options.length)return '';const total=poll.options.reduce((sum,option)=>sum+(Number(option.votes)||0),0);const options=poll.options.map(option=>{const votes=Number(option.votes)||0;const percent=total?Math.round(votes*100/total):0;const selected=String(poll.my_option_id||'')===String(option.id);return `<button class="social-poll-option ${selected?'selected':''}" type="button" data-action="forum-vote" data-post="${esc(post.id)}" data-option="${esc(option.id)}"><span>${esc(option.text)}</span><span>${votes}</span><i class="poll-bar" style="width:${percent}%"></i></button>`}).join('');return `<section class="social-post-poll"><strong>${esc(poll.question)}</strong>${options}<small class="social-poll-total">${total} votos · puedes cambiar tu voto</small></section>`}
-function renderForumPost(post,author){const images=Array.isArray(post.images)?post.images:[];const media=images.map(image=>{const url=forumMediaUrl(image);return url?`<a href="${esc(url)}" target="_blank" rel="noopener"><img src="${esc(url)}" alt="Imagen del post" loading="lazy"></a>`:''}).join('');const content=post.content?`<div class="social-post-content">${esc(post.content)}</div>`:'';const liked=!!post.liked_by_me;const category=esc(post.category_name||'Comunidad');const username=esc(author?.username||('Cuenta '+String(post.author_id||'').slice(0,7)));const avatar=forumAvatar(author);const authorId=esc(post.author_id||'');return `<article class="social-post" data-post-id="${esc(post.id)}"><header class="social-post-header"><button class="post-avatar-button" type="button" data-action="post-profile" data-id="${authorId}" aria-label="Ver perfil de ${username}">${avatar}</button><div class="post-user-meta"><button type="button" data-action="post-profile" data-id="${authorId}">${username}</button><small>${esc(forumDate(post.created_at))}</small></div><span class="post-category">${category}</span></header>${content}${media?`<div class="social-post-media count-${Math.min(images.length,4)}">${media}</div>`:''}${renderForumPoll(post)}<div class="social-post-actions"><button type="button" data-action="forum-like" data-post="${esc(post.id)}" data-liked="${String(liked)}" class="${liked?'active':''}"><i class="ti ${liked?'ti-heart-filled':'ti-heart'}"></i><span>${Number(post.like_count)||0}</span></button><button type="button" data-action="toggle-comments" data-post="${esc(post.id)}"><i class="ti ti-message-circle"></i><span>${Number(post.comment_count)||0} comentarios</span></button><button type="button" data-action="forum-report" data-post="${esc(post.id)}"><i class="ti ti-flag"></i><span>Denunciar</span></button></div><div class="social-post-caption">${esc(post.status==='pending_review'?'En revisión por moderación':'Publicado en '+(post.category_name||'Comunidad'))}</div><div class="social-comments" id="comments-${esc(post.id)}"><div class="social-comments-list"></div><form class="comment-form" data-post="${esc(post.id)}"><textarea maxlength="2000" rows="2" aria-label="Comentario" required></textarea><button type="submit">Enviar ↗</button></form></div></article>`}
-function renderForumCategories(){const select=$('forumCategory');const filter=$('forumFilter');if(select){const previous=select.value;select.innerHTML=forumCategories.map(item=>`<option value="${esc(item.id)}">${esc(item.name)}</option>`).join('')||'<option value="">Sin categorías</option>';if(forumCategories.some(item=>String(item.id)===previous))select.value=previous}if(filter){const previous=activeForumCategory;filter.innerHTML='<option value="">Todas las categorías</option>'+forumCategories.map(item=>`<option value="${esc(item.slug)}">${esc(item.name)}</option>`).join('');filter.value=previous}}
-async function loadForum(append=false){const host=$('forumPosts');if(!host)return;if(!append){forumPage=1;host.innerHTML='<div class="empty-state">Cargando publicaciones... El servidor está trabajando. :|</div>'}try{const page=append?forumPage+1:1;const query='/forum/api/posts?page='+page+'&limit=20'+(activeForumCategory?'&category='+encodeURIComponent(activeForumCategory):'');const [categoryData,postData]=await Promise.all([api('/forum/api/categories'),api(query)]);forumCategories=Array.isArray(categoryData.categories)?categoryData.categories:[];renderForumCategories();const posts=Array.isArray(postData.posts)?postData.posts:[];const authors=await Promise.all([...new Set(posts.map(post=>String(post.author_id||'')))].map(id=>forumUser(id)));const authorMap=new Map();authors.filter(Boolean).forEach(user=>authorMap.set(String(user.id),user));if(!posts.length&&!append)host.innerHTML='<div class="empty-state">Todavía no hay publicaciones. Alguien tiene que iniciar la conversación. :3</div>';else if(posts.length){const markup=posts.map(post=>renderForumPost(post,authorMap.get(String(post.author_id))||forumUserCache.get(String(post.author_id)))).join('');if(append)host.insertAdjacentHTML('beforeend',markup);else host.innerHTML=markup}forumPage=page;forumHasMore=!!postData.has_more;$('forumMorePosts').hidden=!forumHasMore}catch(error){if(!append)host.innerHTML='<div class="empty-state">No se pudo cargar el foro: '+esc(error.message)+'</div>';$('forumMorePosts').hidden=true}}
-async function publishPost(event){event.preventDefault();if(!token||!currentUser)return showToast('Inicia sesión para publicar. Los fantasmas todavía no tienen cuenta. :0');const content=$('postBody').value.trim();const categoryId=$('forumCategory').value;const files=Array.from($('postImages').files||[]);const question=$('forumPollQuestion').value.trim();const options=Array.from(document.querySelectorAll('.forum-poll-option')).map(input=>input.value.trim()).filter(Boolean);if(!categoryId)return showToast('No se encontró ninguna categoría. Actualiza el foro e inténtalo de nuevo.');if(files.length>4)return showToast('Puedes adjuntar un máximo de 4 imágenes por publicación.');if(files.some(file=>file.size>5*1024*1024))return showToast('Cada imagen debe pesar 5 MB o menos');if(files.some(file=>!['image/jpeg','image/png','image/webp'].includes(file.type)))return showToast('Solo se admiten imágenes JPG, PNG o WebP.');let poll=null;if(question){if(options.length<2||options.length>5)return showToast('La encuesta necesita entre 2 y 5 opciones');if(new Set(options.map(option=>option.toLowerCase())).size!==options.length)return showToast('No repitas opciones en la encuesta');poll={question,options}}else if(options.length)return showToast('Escribe la pregunta de la encuesta primero');if(!content&&!poll&&!files.length)return showToast('Escribe un mensaje, añade una imagen o crea una encuesta.');const form=new FormData();form.append('content',content);form.append('category_id',categoryId);if(poll)form.append('poll',JSON.stringify(poll));files.forEach(file=>form.append('images',file,file.name));try{$('publishPost').disabled=true;await api('/forum/api/posts',{method:'POST',body:form});$('forumCompose').reset();$('imageSelectionLabel').textContent='Hasta 4 imágenes · 5 MB cada una';$('forumPollOptions').innerHTML='<input class="forum-poll-option" maxlength="100" aria-label="Opción de encuesta"><input class="forum-poll-option" maxlength="100" aria-label="Opción de encuesta">';showToast('¡Publicación enviada! El servidor hizo su parte. ;D');await loadForum()}catch(error){showToast(error.message)}finally{$('publishPost').disabled=!currentUser}}
-async function loadComments(postId){const box=$('comments-'+postId);if(!box)return;const host=box.querySelector('.social-comments-list');try{const data=await api('/forum/api/posts/'+encodeURIComponent(postId)+'/comments');const comments=Array.isArray(data.comments)?data.comments:[];const authors=await Promise.all([...new Set(comments.map(comment=>String(comment.author_id||'')))].map(id=>forumUser(id)));const byId=new Map();authors.filter(Boolean).forEach(user=>byId.set(String(user.id),user));host.innerHTML=comments.map(comment=>{const user=byId.get(String(comment.author_id));const name=esc(user?.username||('Cuenta '+String(comment.author_id||'').slice(0,7)));return `<div class="social-comment"><span class="social-comment-avatar">${forumAvatar(user)}</span><span><b>${name}</b> ${esc(comment.content)}</span></div>`}).join('')||'<p class="muted small">Todavía no hay comentarios</p>'}catch(error){host.textContent=error.message}}
+const express = require('express');
+const http = require('node:http');
+const https = require('node:https');
+const fs = require('node:fs');
+const path = require('node:path');
 
-function wikiPage(key){document.querySelectorAll('.wiki-tab').forEach(el=>el.classList.toggle('active',el.dataset.wiki===key));const pages={
-start:`<span class="pill">WIKI / MICHUSTUDIO</span><h2>Universo MichuStudio</h2><p>Proyectos, tecnología y comunidad del estudio reunidos en un solo lugar.</p><div class="wiki-cards"><button class="wiki-info-card" data-wiki-card="michiverse"><i class="ti ti-box-multiple"></i><b>Michiverse</b><span>Supervivencia voxel para Android.</span></button><button class="wiki-info-card" data-wiki-card="performance"><i class="ti ti-gauge"></i><b>Rendimiento</b><span>Arquitectura y sistemas del mundo.</span></button><button class="wiki-info-card" data-wiki-card="team"><i class="ti ti-code"></i><b>MichuStudio</b><span>Identidad y desarrollo independiente.</span></button></div>`,
-michiverse:`<span class="pill">PROYECTO PRINCIPAL</span><h2>Michiverse</h2><p>Michiverse es un juego de bloques para Android. Su mundo está formado por terreno voxel, biomas y diferentes bloques para explorar y construir. La idea es que tenga identidad propia y que pueda funcionar bien en móviles.</p><div class="voxel-scene voxel-scene--meadow wiki-hero-scene" aria-hidden="true"><span class="voxel-block block-a"></span><span class="voxel-block block-b"></span><span class="voxel-block block-c"></span><span class="voxel-cloud cloud-a"></span></div><div class="wiki-facts"><div><small>Plataforma</small><b>Android</b></div><div><small>Tipo</small><b>Juego voxel</b></div><div><small>Versión de referencia</small><b>Alpha 1.0.0</b></div><div><small>Estado</small><b>En desarrollo</b></div></div><h3>Un mundo para recorrer</h3><p>El proyecto busca ofrecer paisajes variados, cuevas, biomas y un mundo que se sienta vivo. También se trabaja en opciones para jugar de distintas maneras y construir a tu ritmo.</p><h3>Hecho pensando en móviles</h3><p>El rendimiento es una parte importante del desarrollo. Se prueban técnicas de generación y renderizado para reducir trabajo innecesario y mantener una experiencia estable.</p>`,
-performance:`<span class="pill">PARTE TÉCNICA</span><h2>Rendimiento móvil</h2><p>Michiverse utiliza varias técnicas para evitar trabajo innecesario y controlar el coste de generar y dibujar el mundo.</p><div class="wiki-tech-grid"><section><i class="ti ti-box-model-2"></i><h3>Greedy meshing</h3><p>Une caras visibles compatibles para reducir la cantidad de geometría.</p></section><section><i class="ti ti-stack-2"></i><h3>Caché de chunks</h3><p>Reutiliza datos recientes para evitar regenerar lo mismo una y otra vez.</p></section><section><i class="ti ti-chart-line"></i><h3>Mapas de altura</h3><p>Ayudan a organizar la información del terreno por columnas.</p></section><section><i class="ti ti-photo"></i><h3>Texturas y mipmaps</h3><p>Permiten gestionar materiales y niveles de detalle.</p></section></div>`,
-team:`<span class="pill">DESARROLLO</span><h2>MichuStudio</h2><p>MichuStudio es el nombre del pequeño estudio detrás de Michiverse y de los proyectos que se publiquen aquí.</p><div class="wiki-facts"><div><small>Estudio</small><b>MichuStudio</b></div><div><small>Proyecto destacado</small><b>Michiverse</b></div><div><small>Plataforma principal</small><b>Android</b></div><div><small>Objetivo</small><b>Crear juegos propios</b></div></div><h3>La idea</h3><p>Crear proyectos con una identidad reconocible, cuidar el rendimiento y publicar información clara sobre lo que ya está disponible y lo que todavía necesita trabajo.</p>`,
-media:`<span class="pill">DIRECCIÓN DE ARTE</span><h2>Material gráfico</h2><p>Una colección visual inspirada en los paisajes, bloques y materiales de Michiverse.</p><div class="voxel-gallery"><figure class="voxel-gallery-card"><div class="voxel-scene voxel-scene--meadow" aria-hidden="true"><span class="voxel-block block-a"></span><span class="voxel-block block-b"></span><span class="voxel-block block-c"></span><span class="voxel-cloud cloud-a"></span><span class="voxel-cloud cloud-b"></span></div><figcaption><b>Biomas</b><span>Paisajes y terreno voxel</span></figcaption></figure><figure class="voxel-gallery-card"><div class="voxel-scene voxel-scene--night" aria-hidden="true"><span class="voxel-block block-a"></span><span class="voxel-block block-b"></span><span class="voxel-block block-c"></span><span class="voxel-star star-a"></span><span class="voxel-star star-b"></span></div><figcaption><b>Exploración</b><span>Luces y ambientes</span></figcaption></figure><figure class="voxel-gallery-card"><div class="voxel-scene voxel-scene--ore" aria-hidden="true"><span class="voxel-block block-a"></span><span class="voxel-block block-b"></span><span class="voxel-block block-c"></span><span class="voxel-crystal"></span></div><figcaption><b>Materiales</b><span>Bloques y minerales</span></figcaption></figure></div>`,
-account:`<span class="pill">CUENTAS</span><h2>Perfiles MichuStudio</h2><p>Los perfiles reúnen identidad, estado, descripción, personalización visual y controles de privacidad de cada cuenta.</p><ul class="wiki-list"><li>Sesiones protegidas mediante token.</li><li>Opciones para controlar la visibilidad del perfil.</li><li>Datos privados separados de la información pública.</li></ul>`,
-community:`<span class="pill">COMUNIDAD</span><h2>Perfiles y mensajes</h2><p>La comunidad reúne perfiles públicos, amistades, solicitudes y mensajería privada entre cuentas de MichuStudio.</p>`};$('wikiArticle').innerHTML=pages[key]||pages.start}
-async function delegatedAction(action,id,extra='',state=''){
-switch(action){
-case'view-profile':case'post-profile':return viewProfile(id);
-case'add-friend':return friendAction('request',id);
-case'accept-friend':return friendAction('accept',id);
-case'decline-friend':return friendAction('decline',id);
-case'remove-friend':return friendAction('remove',id);
-case'message-user':go('community');$('mailTo').value=id;$('mailMessage').focus();return;
-case'read-mail':try{await api('/mail/'+encodeURIComponent(id)+'/read',{method:'POST',body:JSON.stringify({userId:currentUser.id})});return loadMail()}catch(error){return showToast(error.message)}
-case'toggle-comments':{const box=$('comments-'+id);if(box)box.classList.toggle('open');if(box&&box.classList.contains('open'))return loadComments(id);return}
-case'forum-like':{if(!token||!currentUser)return showToast('Inicia sesión para dar me gusta');try{await api('/forum/api/posts/'+encodeURIComponent(id)+'/like',{method:state==='true'?'DELETE':'POST'});return loadForum()}catch(error){return showToast(error.message)}}
-case'forum-vote':{if(!token||!currentUser)return showToast('Inicia sesión para votar');if(!extra)return;try{await api('/forum/api/posts/'+encodeURIComponent(id)+'/poll/vote',{method:'POST',body:JSON.stringify({option_id:extra})});return loadForum()}catch(error){return showToast(error.message)}}
-case'forum-report':{if(!token||!currentUser)return showToast('Inicia sesión para denunciar');if(!window.confirm('¿Denunciar esta publicación para que la revisen?'))return;try{await api('/forum/api/posts/'+encodeURIComponent(id)+'/report',{method:'POST',body:JSON.stringify({reason:'other',details:'Reporte desde MichuStudio'})});return showToast('Reporte enviado. Gracias por avisar.')}catch(error){return showToast(error.message)}}
-}
-}
-function bindSettings(){applyWebSettings();$('settingAccent').addEventListener('input',event=>{webSettings.accent=event.target.value;saveWebSettings()});$('settingTheme').addEventListener('change',event=>{webSettings.theme=event.target.value;saveWebSettings()});document.querySelectorAll('[data-accent]').forEach(button=>button.addEventListener('click',()=>{webSettings.accent=button.dataset.accent;saveWebSettings()}));$('resetWebSettings').addEventListener('click',()=>{webSettings={accent:'#0ac85b',theme:'light'};saveWebSettings();showToast('Ajustes restaurados. El verde de Michu ha vuelto. ;D')});$('forumFilter').addEventListener('change',event=>{activeForumCategory=event.target.value;loadForum()})}
 
-async function bootstrap(){
-$('year').textContent=new Date().getFullYear();$('language').value=language;applyLanguage();applyWebSettings();setAuthMode('login');renderAccountState();wikiPage('start');
-document.querySelectorAll('[data-page]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.page)));
-document.querySelectorAll('[data-goto]').forEach(el=>el.addEventListener('click',()=>go(el.dataset.goto)));
-document.querySelectorAll('[data-auth-mode]').forEach(el=>el.addEventListener('click',()=>setAuthMode(el.dataset.authMode)));
-document.querySelectorAll('[data-wiki]').forEach(el=>el.addEventListener('click',()=>wikiPage(el.dataset.wiki)));
-$('language').addEventListener('change',()=>{language=$('language').value;applyLanguage();setAuthMode(authMode)});
-$('mobileMenu').addEventListener('click',()=>{const nav=document.querySelector('.main-nav');const open=!nav.classList.contains('open');nav.classList.toggle('open',open);$('mobileMenu').setAttribute('aria-expanded',String(open))});
-$('openAccount').addEventListener('click',()=>go('account'));$('authForm').addEventListener('submit',submitAuth);$('profileForm').addEventListener('submit',submitProfile);$('passwordForm').addEventListener('submit',changePassword);$('logout').addEventListener('click',logout);
-$('chooseAvatar').addEventListener('click',()=>$('avatarFile').click());$('chooseBanner').addEventListener('click',()=>$('bannerFile').click());$('avatarFile').addEventListener('change',event=>uploadImage('avatar',event.target.files[0]));$('bannerFile').addEventListener('change',event=>uploadImage('banner',event.target.files[0]));$('viewMyProfile').addEventListener('click',()=>currentUser&&viewProfile(currentUser.id));
-$('userSearchForm').addEventListener('submit',event=>{event.preventDefault();searchUsers()});$('refreshRequests').addEventListener('click',loadRequests);$('refreshFriends').addEventListener('click',loadFriends);$('refreshMail').addEventListener('click',loadMail);$('mailForm').addEventListener('submit',sendMail);$('refreshForum').addEventListener('click',()=>loadForum());$('forumCompose').addEventListener('submit',publishPost);$('forumMorePosts').addEventListener('click',()=>loadForum(true));$('postImages').addEventListener('change',()=>{$('imageSelectionLabel').textContent=$('postImages').files.length?$('postImages').files.length+' imagen(es) seleccionada(s)':'Hasta 4 imágenes · 5 MB cada una'});$('addPollOption').addEventListener('click',()=>{const host=$('forumPollOptions');if(host.querySelectorAll('input').length>=5)return showToast('Máximo 5 opciones');const input=document.createElement('input');input.className='forum-poll-option';input.maxLength=100;input.setAttribute('aria-label','Opción de encuesta '+(host.querySelectorAll('input').length+1));host.append(input)});bindSettings();
-$('quickCreatePost').addEventListener('click',()=>{go('forum');$('postBody').focus()});$('dialogClose').addEventListener('click',()=>$('messageDialog').close());$('messageDialog').addEventListener('click',event=>{if(event.target===$('messageDialog'))$('messageDialog').close()});
-document.addEventListener('click',event=>{const accountCard=event.target.closest('[data-user-id]');if(accountCard&&!event.target.closest('button,a,input,textarea,select')){viewProfile(accountCard.dataset.userId);return}const gameButton=event.target.closest('[data-game-info]');if(gameButton){const game=gameById.get(gameButton.dataset.gameInfo);if(game)renderGameDetails(game);return}const actionButton=event.target.closest('[data-action]');if(actionButton){event.preventDefault();delegatedAction(actionButton.dataset.action,actionButton.dataset.id||actionButton.dataset.post||'',actionButton.dataset.option||'',actionButton.dataset.liked||'');return}const wikiCard=event.target.closest('[data-wiki-card]');if(wikiCard){wikiPage(wikiCard.dataset.wikiCard);return}});
-document.addEventListener('submit',async event=>{const form=event.target.closest('.comment-form');if(!form)return;event.preventDefault();if(!token||!currentUser)return showToast('Inicia sesión para comentar');const field=form.querySelector('textarea');const content=field.value.trim();if(!content)return;try{await api('/forum/api/posts/'+encodeURIComponent(form.dataset.post)+'/comments',{method:'POST',body:JSON.stringify({content})});form.reset();showToast('Comentario enviado. Todo en orden. :)');await loadComments(form.dataset.post);await loadForum()}catch(error){showToast(error.message)}});
-if(token){try{const data=await api('/auth/me');if(data.user)saveUser(data.user)}catch{token='';currentUser=null;localStorage.removeItem(STORAGE_TOKEN);localStorage.removeItem(STORAGE_USER);localStorage.removeItem('michustudio_session_saved_at');renderAccountState()}}
-loadGames();loadForum();
+const app = express();
+const PORT = Number(process.env.PORT) || 3000;
+const MAIN_FILE = path.join(__dirname, 'Main.html');
+const STYLE_FILE = path.join(__dirname, 'Style.css');
+const GAMES_FILE = path.join(__dirname, 'Juegos.json');
+const PHOTOS_DIR = path.join(__dirname, 'Photos');
+const MICHIVERSE_IMAGES_DIR = path.join(PHOTOS_DIR, 'imágenes');
+const MICHIVERSE_IMAGES_FOLDER = 'imágenes';
+const IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.avif', '.gif']);
+
+fs.mkdirSync(MICHIVERSE_IMAGES_DIR, { recursive: true });
+const ACCOUNT_API = new URL(
+  (process.env.ACCOUNT_API_URL || 'https://michiverse-server.onrender.com').replace(/\/+$/, '')
+);
+const FORUM_API = new URL(
+  (process.env.FORUM_API_URL || 'https://michustudioforum.onrender.com').replace(/\/+$/, '')
+);
+
+app.disable('x-powered-by');
+
+app.get('/health', (_req, res) => {
+  res.json({
+    ok: true,
+    service: 'michustudio',
+    accountServer: ACCOUNT_API.origin,
+    forumServer: FORUM_API.origin,
+    photosDirectory: 'Photos',
+    michiverseImagesDirectory: 'Photos/imágenes',
+    gamesFile: 'Juegos.json'
+  });
+});
+
+app.get(['/', '/index.html', '/Main.html'], (_req, res) => {
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
+  res.set('Cache-Control', 'no-store, max-age=0');
+  res.sendFile(MAIN_FILE, err => {
+    if (err && !res.headersSent) {
+      res.status(404).type('text').send('Main.html no está disponible.');
+    }
+  });
+});
+
+app.get('/Style.css', (_req, res) => {
+  res.setHeader('Content-Type', 'text/css; charset=utf-8');
+  res.set('Cache-Control', 'no-store, max-age=0');
+  res.type('text/css');
+  res.sendFile(STYLE_FILE, err => {
+    if (err && !res.headersSent) res.status(404).type('text').send('Style.css no está disponible.');
+  });
+});
+
+app.get(['/Juegos.json', '/juegos.json'], (_req, res) => {
+  if (!fs.existsSync(GAMES_FILE)) {
+    return res.status(404).json({ error: 'Juegos.json no está disponible.' });
+  }
+
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+  res.set('Cache-Control', 'no-store, max-age=0');
+  res.type('application/json');
+  res.sendFile(GAMES_FILE, err => {
+    if (err && !res.headersSent) {
+      res.status(404).json({ error: 'No se pudo leer Juegos.json.' });
+    }
+  });
+});
+
+
+// Lista las capturas de Michiverse. Solo muestra archivos de imagen directos
+// dentro de Photos/imágenes; no recorre carpetas ni expone archivos ocultos.
+app.get('/api/michiverse-images', async (_req, res) => {
+  try {
+    const entries = await fs.promises.readdir(MICHIVERSE_IMAGES_DIR, { withFileTypes: true });
+    const images = entries
+      .filter(entry => entry.isFile() && !entry.name.startsWith('.') && IMAGE_EXTENSIONS.has(path.extname(entry.name).toLowerCase()))
+      .sort((a, b) => a.name.localeCompare(b.name, 'es'))
+      .map(entry => {
+        const extension = path.extname(entry.name);
+        const label = entry.name.slice(0, -extension.length).replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
+        return {
+          name: entry.name,
+          label: label || 'Captura de Michiverse',
+          url: `/Photos/${encodeURIComponent(MICHIVERSE_IMAGES_FOLDER)}/${encodeURIComponent(entry.name)}`
+        };
+      });
+
+    res.set('Cache-Control', 'no-store, max-age=0');
+    res.json({ images });
+  } catch (error) {
+    console.error('[MichuStudio] No se pudo leer Photos/imágenes:', error.message);
+    res.status(500).json({ error: 'No se pudo leer la carpeta Photos/imágenes.' });
+  }
+});
+
+// Todas las imágenes propias de la web se sirven desde /Photos/.
+// Ejemplo: Photos/Michiverse.png -> https://tu-web.onrender.com/Photos/Michiverse.png
+app.use('/Photos', express.static(PHOTOS_DIR, {
+  dotfiles: 'deny',
+  fallthrough: true,
+  index: false,
+  redirect: false,
+  maxAge: '1h',
+  setHeaders(res) {
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+  }
+}));
+app.use('/Photos', (_req, res) => {
+  res.status(404).json({ error: 'La imagen no existe dentro de la carpeta Photos.' });
+});
+
+app.get(['/admin', '/admin.html'], (_req, res) => {
+  const file = path.join(__dirname, 'admin.html');
+  if (!fs.existsSync(file)) {
+    return res.status(404).type('text').send('Panel de administración no disponible.');
+  }
+
+  res.sendFile(file, err => {
+    if (err && !res.headersSent) {
+      res.status(404).type('text').send('Panel de administración no disponible.');
+    }
+  });
+});
+
+function proxyTo(target, { stripPrefix = '' } = {}) {
+  return (req, res) => {
+    let requestPath = req.originalUrl;
+
+    if (stripPrefix) {
+      requestPath = requestPath.replace(new RegExp(`^${stripPrefix}(?=/|\\?|$)`), '') || '/';
+    }
+
+    if (!requestPath.startsWith('/')) requestPath = `/${requestPath}`;
+
+    let upstreamUrl;
+    try {
+      upstreamUrl = new URL(requestPath, target);
+    } catch {
+      return res.status(400).json({ error: 'La ruta solicitada no es válida.' });
+    }
+
+    const client = upstreamUrl.protocol === 'https:' ? https : http;
+    const requestHeaders = {
+      ...req.headers,
+      host: upstreamUrl.host,
+      connection: 'close'
+    };
+    delete requestHeaders['proxy-connection'];
+
+    const upstreamReq = client.request(upstreamUrl, {
+      method: req.method,
+      headers: requestHeaders
+    }, upstreamRes => {
+      const responseHeaders = { ...upstreamRes.headers };
+
+      for (const name of [
+        'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
+        'te', 'trailer', 'transfer-encoding', 'upgrade'
+      ]) {
+        delete responseHeaders[name];
+      }
+
+      if (responseHeaders['set-cookie']) {
+        const cookies = Array.isArray(responseHeaders['set-cookie'])
+          ? responseHeaders['set-cookie']
+          : [responseHeaders['set-cookie']];
+        responseHeaders['set-cookie'] = cookies.map(cookie =>
+          cookie.replace(/;\s*domain=[^;]+/ig, '')
+        );
+      }
+
+      res.writeHead(upstreamRes.statusCode || 502, responseHeaders);
+      upstreamRes.pipe(res);
+    });
+
+    upstreamReq.setTimeout(90000, () => {
+      upstreamReq.destroy(new Error('El servidor remoto tardó demasiado.'));
+    });
+
+    upstreamReq.on('error', () => {
+      if (!res.headersSent) {
+        res.status(502).json({
+          error: 'No se pudo conectar con el servidor remoto. Intenta de nuevo.'
+        });
+      } else {
+        res.destroy();
+      }
+    });
+
+    req.pipe(upstreamReq);
+  };
 }
-document.addEventListener('DOMContentLoaded',bootstrap);
-</script>
-</body>
-</html>
+
+// La web usa rutas como /forum/posts. El prefijo /forum se elimina
+// antes de enviar la petición al servicio del foro.
+app.use('/forum', proxyTo(FORUM_API, { stripPrefix: '/forum' }));
+
+// El resto de las rutas de API se envía al servidor de cuentas.
+app.use(proxyTo(ACCOUNT_API));
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(
+    `[MichuStudio] Web lista en el puerto ${PORT}; ` +
+    `cuentas: ${ACCOUNT_API.origin}; foro: ${FORUM_API.origin}; ` +
+    `imágenes: /Photos/imágenes; juegos: /Juegos.json`
+  );
+});
