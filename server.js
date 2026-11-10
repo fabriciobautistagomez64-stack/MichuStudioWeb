@@ -34,6 +34,8 @@ app.get('/health', (_req, res) => {
 });
 
 app.get(['/', '/index.html', '/Main.html'], (_req, res) => {
+  // Forzar UTF-8 para tildes, ñ y símbolos.
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.set('Cache-Control', 'no-store, max-age=0');
   res.sendFile(MAIN_FILE, err => {
     if (err && !res.headersSent) {
@@ -43,8 +45,8 @@ app.get(['/', '/index.html', '/Main.html'], (_req, res) => {
 });
 
 app.get('/Style.css', (_req, res) => {
+  res.setHeader('Content-Type', 'text/css; charset=utf-8');
   res.set('Cache-Control', 'no-store, max-age=0');
-  res.type('text/css');
   res.sendFile(STYLE_FILE, err => {
     if (err && !res.headersSent) res.status(404).type('text').send('Style.css no está disponible.');
   });
@@ -55,8 +57,8 @@ app.get(['/Juegos.json', '/juegos.json'], (_req, res) => {
     return res.status(404).json({ error: 'Juegos.json no está disponible.' });
   }
 
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
   res.set('Cache-Control', 'no-store, max-age=0');
-  res.type('application/json');
   res.sendFile(GAMES_FILE, err => {
     if (err && !res.headersSent) {
       res.status(404).json({ error: 'No se pudo leer Juegos.json.' });
@@ -176,3 +178,4 @@ app.listen(PORT, '0.0.0.0', () => {
     `imágenes: /Photos; juegos: /Juegos.json`
   );
 });
+
