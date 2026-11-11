@@ -6,7 +6,6 @@ const https = require('node:https');
 const fs = require('node:fs');
 const path = require('node:path');
 
-
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
 const MAIN_FILE = path.join(__dirname, 'Main.html');
@@ -18,6 +17,7 @@ const MICHIVERSE_IMAGES_FOLDER = 'imágenes';
 const IMAGE_EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp', '.avif', '.gif']);
 
 fs.mkdirSync(MICHIVERSE_IMAGES_DIR, { recursive: true });
+
 const ACCOUNT_API = new URL(
   (process.env.ACCOUNT_API_URL || 'https://michiverse-server.onrender.com').replace(/\/+$/, '')
 );
@@ -54,7 +54,9 @@ app.get('/Style.css', (_req, res) => {
   res.set('Cache-Control', 'no-store, max-age=0');
   res.type('text/css');
   res.sendFile(STYLE_FILE, err => {
-    if (err && !res.headersSent) res.status(404).type('text').send('Style.css no está disponible.');
+    if (err && !res.headersSent) {
+      res.status(404).type('text').send('Style.css no está disponible.');
+    }
   });
 });
 
@@ -73,18 +75,25 @@ app.get(['/Juegos.json', '/juegos.json'], (_req, res) => {
   });
 });
 
-
-// Lista las capturas de Michiverse. Solo muestra archivos de imagen directos
-// dentro de Photos/imágenes; no recorre carpetas ni expone archivos ocultos.
+// Lista las capturas de Michiverse que están directamente dentro de Photos/imágenes.
 app.get('/api/michiverse-images', async (_req, res) => {
   try {
     const entries = await fs.promises.readdir(MICHIVERSE_IMAGES_DIR, { withFileTypes: true });
     const images = entries
-      .filter(entry => entry.isFile() && !entry.name.startsWith('.') && IMAGE_EXTENSIONS.has(path.extname(entry.name).toLowerCase()))
+      .filter(entry =>
+        entry.isFile() &&
+        !entry.name.startsWith('.') &&
+        IMAGE_EXTENSIONS.has(path.extname(entry.name).toLowerCase())
+      )
       .sort((a, b) => a.name.localeCompare(b.name, 'es'))
       .map(entry => {
         const extension = path.extname(entry.name);
-        const label = entry.name.slice(0, -extension.length).replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
+        const label = entry.name
+          .slice(0, -extension.length)
+          .replace(/[_-]+/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+
         return {
           name: entry.name,
           label: label || 'Captura de Michiverse',
@@ -100,8 +109,6 @@ app.get('/api/michiverse-images', async (_req, res) => {
   }
 });
 
-// Todas las imágenes propias de la web se sirven desde /Photos/.
-// Ejemplo: Photos/Michiverse.png -> https://tu-web.onrender.com/Photos/Michiverse.png
 app.use('/Photos', express.static(PHOTOS_DIR, {
   dotfiles: 'deny',
   fallthrough: true,
@@ -129,15 +136,35 @@ app.get(['/admin', '/admin.html'], (_req, res) => {
   });
 });
 
-function proxyTo(target, { stripPrefix = '' } = {}) {
+function retryAfterDelay(value) {
+  if (Array.isArray(value)) value = value[0];
+  if (value === undefined || value === null || value === '') return 1200;
+
+  const seconds = Number(value);
+  let delay;
+
+  if (Number.isFinite(seconds)) {
+    delay = seconds * 1000;
+  } else {
+    const date = Date.parse(String(value));
+    if (!Number.isFinite(date)) return 1200;
+    delay = date - Date.now();
+  }
+
+  // No mantener una petición abierta indefinidamente si el upstream pide esperar demasiado.
+  if (delay > 30000) return null;
+  return Math.max(250, delay);
+}
+
+function proxyTo(target, { stripPrefix = '', label = 'cuentas', retry429 = true } = {}) {
   return (req, res) => {
     let requestPath = req.originalUrl;
 
     if (stripPrefix) {
-      requestPath = requestPath.replace(new RegExp(`^${stripPrefix}(?=/|\\?|$)`), '') || '/';
+      requestPath = requestPath.replace(new RegExp('^' + stripPrefix + '(?=/|\\?|$)'), '') || '/';
     }
 
-    if (!requestPath.startsWith('/')) requestPath = `/${requestPath}`;
+    if (!requestPath.startsWith('/')) requestPath = '/' + requestPath;
 
     let upstreamUrl;
     try {
@@ -154,56 +181,129 @@ function proxyTo(target, { stripPrefix = '' } = {}) {
     };
     delete requestHeaders['proxy-connection'];
 
-    const upstreamReq = client.request(upstreamUrl, {
-      method: req.method,
-      headers: requestHeaders
-    }, upstreamRes => {
-      const responseHeaders = { ...upstreamRes.headers };
+    const hasRequestBody = req.method !== 'GET' && req.method !== 'HEAD';
+    const canRetry429 =
+      retry429 &&
+      !hasRequestBody &&
+      !req.headers['content-length'] &&
+      !req.headers['transfer-encoding'];
 
-      for (const name of [
-        'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
-        'te', 'trailer', 'transfer-encoding', 'upgrade'
-      ]) {
-        delete responseHeaders[name];
+    let attempts = 0;
+    let retryTimer = null;
+    let clientClosed = false;
+
+    const clearRetryTimer = () => {
+      if (retryTimer !== null) {
+        clearTimeout(retryTimer);
+        retryTimer = null;
       }
+    };
 
-      if (responseHeaders['set-cookie']) {
-        const cookies = Array.isArray(responseHeaders['set-cookie'])
-          ? responseHeaders['set-cookie']
-          : [responseHeaders['set-cookie']];
-        responseHeaders['set-cookie'] = cookies.map(cookie =>
-          cookie.replace(/;\s*domain=[^;]+/ig, '')
-        );
-      }
+    const fail = () => {
+      clearRetryTimer();
 
-      res.writeHead(upstreamRes.statusCode || 502, responseHeaders);
-      upstreamRes.pipe(res);
-    });
-
-    upstreamReq.setTimeout(90000, () => {
-      upstreamReq.destroy(new Error('El servidor remoto tardó demasiado.'));
-    });
-
-    upstreamReq.on('error', () => {
-      if (!res.headersSent) {
+      if (!res.headersSent && !res.destroyed) {
         res.status(502).json({
           error: 'No se pudo conectar con el servidor remoto. Intenta de nuevo.'
         });
-      } else {
+      } else if (!res.destroyed) {
         res.destroy();
       }
+    };
+
+    res.on('close', () => {
+      clientClosed = true;
+      clearRetryTimer();
     });
 
-    req.pipe(upstreamReq);
+    req.on('aborted', () => {
+      clientClosed = true;
+      clearRetryTimer();
+    });
+
+    const send = () => {
+      if (clientClosed || res.destroyed) return;
+
+      attempts += 1;
+
+      const upstreamReq = client.request(upstreamUrl, {
+        method: req.method,
+        headers: requestHeaders
+      }, upstreamRes => {
+        const statusCode = upstreamRes.statusCode || 502;
+
+        // Solo reintenta lecturas seguras; nunca duplica POST, PUT, PATCH ni DELETE.
+        if (statusCode === 429 && canRetry429 && attempts === 1) {
+          const delay = retryAfterDelay(upstreamRes.headers['retry-after']);
+
+          if (delay !== null) {
+            upstreamRes.resume();
+            retryTimer = setTimeout(() => {
+              retryTimer = null;
+              send();
+            }, delay);
+            return;
+          }
+        }
+
+        const responseHeaders = { ...upstreamRes.headers };
+
+        for (const name of [
+          'connection', 'keep-alive', 'proxy-authenticate', 'proxy-authorization',
+          'te', 'trailer', 'transfer-encoding', 'upgrade'
+        ]) {
+          delete responseHeaders[name];
+        }
+
+        if (responseHeaders['set-cookie']) {
+          const cookies = Array.isArray(responseHeaders['set-cookie'])
+            ? responseHeaders['set-cookie']
+            : [responseHeaders['set-cookie']];
+
+          responseHeaders['set-cookie'] = cookies.map(cookie =>
+            cookie.replace(/;\s*domain=[^;]+/ig, '')
+          );
+        }
+
+        responseHeaders['x-michustudio-proxy'] = 'michustudio';
+        responseHeaders['x-michustudio-upstream'] = label;
+        responseHeaders['x-michustudio-retries'] = String(attempts - 1);
+
+        if (statusCode === 429) {
+          console.warn(
+            '[MichuStudio] HTTP 429 desde ' + label +
+            ' en ' + req.method + ' ' + upstreamUrl.pathname +
+            ' (reintentos: ' + (attempts - 1) + ')'
+          );
+        }
+
+        res.writeHead(statusCode, responseHeaders);
+        upstreamRes.pipe(res);
+      });
+
+      upstreamReq.setTimeout(90000, () => {
+        upstreamReq.destroy(new Error('El servidor remoto tardó demasiado.'));
+      });
+
+      upstreamReq.on('error', fail);
+
+      if (hasRequestBody) {
+        req.pipe(upstreamReq);
+      } else {
+        req.resume();
+        upstreamReq.end();
+      }
+    };
+
+    send();
   };
 }
 
-// La web usa rutas como /forum/posts. El prefijo /forum se elimina
-// antes de enviar la petición al servicio del foro.
-app.use('/forum', proxyTo(FORUM_API, { stripPrefix: '/forum' }));
+// Las rutas /forum/... se envían al servicio del foro quitando el prefijo /forum.
+app.use('/forum', proxyTo(FORUM_API, { stripPrefix: '/forum', label: 'foro' }));
 
-// El resto de las rutas de API se envía al servidor de cuentas.
-app.use(proxyTo(ACCOUNT_API));
+// Las demás rutas de API se envían al servidor de cuentas.
+app.use(proxyTo(ACCOUNT_API, { label: 'cuentas' }));
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(
