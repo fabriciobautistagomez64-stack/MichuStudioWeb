@@ -87,3 +87,6 @@ html[data-theme="dark"] .bottom-link{color:#b7c9bb}
 .button:not(:disabled):hover,.feature-card:hover,.palette-swatch:hover,.user-row:hover,.social-post-media a:hover img{transform:none!important;filter:none!important}
 .bottom-quicknav{grid-template-columns:repeat(6,minmax(0,1fr));left:50%;transform:translateX(-50%)}
 .toast{transform:translateX(-50%)}
+.game-cover.has-image .pixel-mark {
+  display: none !important;
+}
