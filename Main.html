@@ -12,7 +12,7 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.48.0/dist/tabler-icons.min.css">
-<link rel="stylesheet" href="/Style.css?v=4">
+<link rel="stylesheet" href="/Style.css?v=5">
 <style id="forum-compose-layout-fix">
   /* El formulario actual ya no usa la columna de avatar del diseño anterior. */
   #forumCompose {
@@ -38,7 +38,26 @@
 <style id="michustudio-static-media">
   html { scroll-behavior: auto !important; }
   *, *::before, *::after { animation: none !important; transition: none !important; }
-  *:hover { transform: none !important; }
+
+  /* Desactivar únicamente los movimientos decorativos al pasar el cursor.
+     No usar *:hover: algunos componentes fijos dependen de transform para centrarse. */
+  .button:not(:disabled):hover,
+  .feature-card:hover,
+  .palette-swatch:hover,
+  .user-row:hover,
+  .social-post-media a:hover img {
+    transform: none !important;
+    filter: none !important;
+  }
+
+  /* La barra tiene seis accesos y debe conservar su centrado incluso al tocarla. */
+  .bottom-quicknav {
+    grid-template-columns: repeat(6, minmax(0, 1fr)) !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+  .toast { transform: translateX(-50%) !important; }
+
   .hero-art { isolation: isolate; overflow: hidden; }
   .hero-art::before, .hero-art::after { content: none !important; display: none !important; }
   .hero-art-image { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; opacity: .82; }
@@ -54,7 +73,10 @@
   .voxel-gallery-card figcaption b { font-size: 14px; }
   .voxel-gallery-card figcaption span { font-size: 12px; opacity: .68; }
   .media-empty { grid-column: 1 / -1; padding: 18px; border: 1px dashed rgba(80,145,95,.35); border-radius: 14px; }
-  @media (max-width: 700px) { .voxel-gallery { grid-template-columns: 1fr; } .wiki-image-hero img { max-height: 230px; } }
+  @media (max-width: 700px) {
+    .voxel-gallery { grid-template-columns: 1fr; }
+    .wiki-image-hero img { max-height: 230px; }
+  }
 </style>
 
 </head>
