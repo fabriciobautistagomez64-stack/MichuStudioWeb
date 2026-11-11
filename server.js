@@ -5,6 +5,7 @@ const http = require('node:http');
 const https = require('node:https');
 const fs = require('node:fs');
 const path = require('node:path');
+const net = require('node:net');
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -27,6 +28,26 @@ const FORUM_API = new URL(
 
 app.disable('x-powered-by');
 
+// Render entrega el IP real del visitante en CF-Connecting-IP.
+// Ese valor se reenvía como un único X-Forwarded-For para que los
+// backends que usan Express trust proxy = 1 limiten por visitante,
+// y no por la IP compartida del proxy de MichuStudio.
+function getVerifiedClientIp(req) {
+  const cloudflareIp = String(req.headers['cf-connecting-ip'] || '').trim();
+
+  if (net.isIP(cloudflareIp)) {
+    return { address: cloudflareIp, source: 'cf-connecting-ip' };
+  }
+
+  const socketIp = String(req.socket?.remoteAddress || '').trim();
+
+  if (net.isIP(socketIp)) {
+    return { address: socketIp, source: 'socket-fallback' };
+  }
+
+  return { address: 'unknown', source: 'unavailable' };
+}
+
 app.get('/health', (_req, res) => {
   res.json({
     ok: true,
@@ -35,7 +56,8 @@ app.get('/health', (_req, res) => {
     forumServer: FORUM_API.origin,
     photosDirectory: 'Photos',
     michiverseImagesDirectory: 'Photos/imágenes',
-    gamesFile: 'Juegos.json'
+    gamesFile: 'Juegos.json',
+    clientIpForwarding: 'CF-Connecting-IP -> X-Forwarded-For'
   });
 });
 
@@ -138,7 +160,7 @@ app.get(['/admin', '/admin.html'], (_req, res) => {
 
 function retryAfterDelay(value) {
   if (Array.isArray(value)) value = value[0];
-  if (value === undefined || value === null || value === '') return 1200;
+  if (value === undefined || value === null || value === '') return null;
 
   const seconds = Number(value);
   let delay;
@@ -147,7 +169,7 @@ function retryAfterDelay(value) {
     delay = seconds * 1000;
   } else {
     const date = Date.parse(String(value));
-    if (!Number.isFinite(date)) return 1200;
+    if (!Number.isFinite(date)) return null;
     delay = date - Date.now();
   }
 
@@ -174,11 +196,19 @@ function proxyTo(target, { stripPrefix = '', label = 'cuentas', retry429 = true 
     }
 
     const client = upstreamUrl.protocol === 'https:' ? https : http;
+    const clientIp = getVerifiedClientIp(req);
     const requestHeaders = {
       ...req.headers,
       host: upstreamUrl.host,
       connection: 'close'
     };
+
+    // No confiar en una cadena X-Forwarded-For recibida tal cual.
+    // Cloudflare normaliza el IP del visitante en CF-Connecting-IP.
+    requestHeaders['x-forwarded-for'] = clientIp.address;
+    requestHeaders['x-real-ip'] = clientIp.address;
+    delete requestHeaders['cf-connecting-ip'];
+    delete requestHeaders.forwarded;
     delete requestHeaders['proxy-connection'];
 
     const hasRequestBody = req.method !== 'GET' && req.method !== 'HEAD';
@@ -268,12 +298,15 @@ function proxyTo(target, { stripPrefix = '', label = 'cuentas', retry429 = true 
         responseHeaders['x-michustudio-proxy'] = 'michustudio';
         responseHeaders['x-michustudio-upstream'] = label;
         responseHeaders['x-michustudio-retries'] = String(attempts - 1);
+        responseHeaders['x-michustudio-client-ip-source'] = clientIp.source;
 
         if (statusCode === 429) {
           console.warn(
             '[MichuStudio] HTTP 429 desde ' + label +
             ' en ' + req.method + ' ' + upstreamUrl.pathname +
-            ' (reintentos: ' + (attempts - 1) + ')'
+            ' (reintentos: ' + (attempts - 1) + '; Retry-After: ' +
+            String(upstreamRes.headers['retry-after'] || 'no indicado') +
+            '; IP: ' + clientIp.source + ')'
           );
         }
 
