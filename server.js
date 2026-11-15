@@ -28,78 +28,6 @@ const FORUM_API = new URL(
 
 app.disable('x-powered-by');
 
-const WEB_ORIGIN = new URL(
-  process.env.WEB_ORIGIN || 'https://michustudio.onrender.com'
-).origin;
-const SESSION_COOKIE = 'michu_session';
-
-app.use((req, res, next) => {
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'DENY');
-  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
-  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
-  res.setHeader('X-Permitted-Cross-Domain-Policies', 'none');
-  res.setHeader('Cross-Origin-Opener-Policy', 'same-origin');
-  res.setHeader('Cross-Origin-Resource-Policy', 'same-origin');
-
-  const forwardedProto = String(req.headers['x-forwarded-proto'] || '').split(',')[0].trim();
-  if (req.secure || forwardedProto === 'https') {
-    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains');
-  }
-
-  next();
-});
-
-function readCookie(req, name) {
-  const cookieHeader = String(req.headers.cookie || '');
-  for (const part of cookieHeader.split(';')) {
-    const separator = part.indexOf('=');
-    if (separator < 0 || part.slice(0, separator).trim() !== name) continue;
-
-    try {
-      return decodeURIComponent(part.slice(separator + 1).trim());
-    } catch {
-      return '';
-    }
-  }
-  return '';
-}
-
-function getTokenExpiry(token) {
-  try {
-    const encodedPayload = String(token).split('.')[0];
-    const payload = JSON.parse(Buffer.from(encodedPayload, 'base64url').toString('utf8'));
-    let expiry = Number(payload.exp);
-
-    if (Number.isFinite(expiry) && expiry > 0 && expiry < 1000000000000) {
-      expiry *= 1000;
-    }
-
-    return Number.isFinite(expiry) ? expiry : 0;
-  } catch {
-    return 0;
-  }
-}
-
-function makeSessionCookie(token) {
-  const maxAge = Math.floor((getTokenExpiry(token) - Date.now()) / 1000);
-  if (maxAge < 1) return '';
-
-  return `${SESSION_COOKIE}=${encodeURIComponent(token)}; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=${maxAge}`;
-}
-
-function clearSessionCookie() {
-  return `${SESSION_COOKIE}=; Path=/; HttpOnly; Secure; SameSite=Strict; Max-Age=0`;
-}
-
-function isAllowedWebOrigin(req) {
-  return String(req.headers.origin || '').trim() === WEB_ORIGIN;
-}
-
-// Render entrega el IP real del visitante en CF-Connecting-IP.
-// Ese valor se reenvía como un único X-Forwarded-For para que los
-// backends que usan Express trust proxy = 1 limiten por visitante,
-// y no por la IP compartida del proxy de MichuStudio.
 function getVerifiedClientIp(req) {
   const cloudflareIp = String(req.headers['cf-connecting-ip'] || '').trim();
 
@@ -213,8 +141,17 @@ app.use('/Photos', (_req, res) => {
   res.status(404).json({ error: 'La imagen no existe dentro de la carpeta Photos.' });
 });
 
-app.all(['/admin', '/admin.html', '/admin/*'], (_req, res) => {
-  res.status(404).type('text').send('No hay nada que ver por aqui :P');
+app.get(['/admin', '/admin.html'], (_req, res) => {
+  const file = path.join(__dirname, 'admin.html');
+  if (!fs.existsSync(file)) {
+    return res.status(404).type('text').send('Panel de administración no disponible.');
+  }
+
+  res.sendFile(file, err => {
+    if (err && !res.headersSent) {
+      res.status(404).type('text').send('Panel de administración no disponible.');
+    }
+  });
 });
 
 function retryAfterDelay(value) {
@@ -261,38 +198,6 @@ function proxyTo(target, { stripPrefix = '', label = 'cuentas', retry429 = true 
       host: upstreamUrl.host,
       connection: 'close'
     };
-
-    const sessionToken = readCookie(req, SESSION_COOKIE);
-    const isWriteRequest = !['GET', 'HEAD', 'OPTIONS'].includes(req.method.toUpperCase());
-    const hasOrigin = !!String(req.headers.origin || '').trim();
-
-    if (
-      isWriteRequest &&
-      ((sessionToken && !isAllowedWebOrigin(req)) ||
-       (hasOrigin && !isAllowedWebOrigin(req)))
-    ) {
-      return res.status(403).json({ error: 'Origen no permitido' });
-    }
-
-    delete requestHeaders.cookie;
-
-    if (sessionToken) {
-      requestHeaders.authorization = `Bearer ${sessionToken}`;
-    }
-
-    const authPath = upstreamUrl.pathname;
-    const isSessionEndpoint =
-      !stripPrefix &&
-      req.method.toUpperCase() === 'POST' &&
-      ['/login', '/register', '/auth/refresh', '/account/password'].includes(authPath);
-    const isLogoutEndpoint =
-      !stripPrefix &&
-      req.method.toUpperCase() === 'POST' &&
-      authPath === '/logout';
-
-    if (isSessionEndpoint) {
-      requestHeaders['accept-encoding'] = 'identity';
-    }
 
     // No confiar en una cadena X-Forwarded-For recibida tal cual.
     // Cloudflare normaliza el IP del visitante en CF-Connecting-IP.
@@ -399,58 +304,6 @@ function proxyTo(target, { stripPrefix = '', label = 'cuentas', retry429 = true 
             String(upstreamRes.headers['retry-after'] || 'no indicado') +
             '; IP: ' + clientIp.source + ')'
           );
-        }
-
-        if (isSessionEndpoint || isLogoutEndpoint) {
-          const chunks = [];
-
-          upstreamRes.on('data', chunk => chunks.push(Buffer.from(chunk)));
-          upstreamRes.on('end', () => {
-            let body = Buffer.concat(chunks);
-            const cookies = [];
-
-            if (isLogoutEndpoint && statusCode >= 200 && statusCode < 500) {
-              cookies.push(clearSessionCookie());
-            }
-
-            if (isSessionEndpoint && statusCode >= 200 && statusCode < 300) {
-              try {
-                const payload = JSON.parse(body.toString('utf8'));
-                const token = typeof payload.token === 'string' ? payload.token : '';
-                const cookie = token ? makeSessionCookie(token) : '';
-
-                if (cookie) {
-                  cookies.push(cookie);
-                  delete payload.token;
-                  delete payload.tokenExpiresAt;
-                  body = Buffer.from(JSON.stringify(payload));
-                  responseHeaders['content-type'] = 'application/json; charset=utf-8';
-                }
-              } catch (error) {
-                console.error('[MichuStudio] No se pudo procesar la respuesta de sesión:', error.message);
-              }
-            }
-
-            if (cookies.length) {
-              const existing = responseHeaders['set-cookie'];
-              const existingCookies = existing
-                ? (Array.isArray(existing) ? existing : [existing])
-                : [];
-              responseHeaders['set-cookie'] = [...existingCookies, ...cookies];
-            }
-
-            delete responseHeaders['content-length'];
-            delete responseHeaders['content-encoding'];
-            delete responseHeaders.etag;
-            delete responseHeaders['content-md5'];
-            delete responseHeaders.digest;
-            responseHeaders['content-length'] = String(body.length);
-            res.writeHead(statusCode, responseHeaders);
-            res.end(body);
-          });
-
-          upstreamRes.on('error', fail);
-          return;
         }
 
         res.writeHead(statusCode, responseHeaders);
